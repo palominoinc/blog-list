@@ -87,6 +87,14 @@ or else only the first n items will be sorted -->
     <xsl:variable name="num-pages">
       <xsl:value-of select="ceiling($num-items div $items-per-page)"/>
     </xsl:variable>
+    
+<!--     recent articles subset -->
+    <xsl:variable name="subset-recent">
+        <xsl:for-each select="exsl:node-set($sorted-articles)/blog[position() &lt;= 5]">
+            <xsl:copy-of select="."/>
+        </xsl:for-each>
+    </xsl:variable>
+    
     <!-- START output the bloglist -->
 
     <div class="row">
@@ -146,9 +154,33 @@ and display the full pagination-->
           </xsl:element>
         </xsl:element>
       </div>
+      
       <div class="col-md-3 blog-sidebar">
         
+        <section class="widget search">
+          <h3 class="sr-only title">Search Blog</h3>
+          <form class="search-blog-form">
+              <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search blog..."/>
+              </div>
+              <button type="submit" class="btn btn-cta btn-cta-secondary">
+                <i class="fa fa-search"></i>
+              </button>
+          </form>
+        </section>
+        <!--//search-->
         
+        <section class="widget recent-posts blog-filters">
+          <h3 class="title">Recent Posts</h3>
+          <ul class="list-unstyled">
+            
+          <xsl:call-template name="recent-posts" mode="meta">
+              <xsl:with-param name="recent" select="($subset-recent)"/>
+          </xsl:call-template>
+             
+            
+          </ul>
+        </section>
         
         <div class="blog-filters">
           <div class="title">Categories</div>
@@ -169,6 +201,13 @@ and display the full pagination-->
           </xsl:call-template>
         </div>
       </div>
+      
+<!--       <xsl:call-templates name="blog-sidebar">
+          <xsl:with-param name="bloglist" select="."/>
+          <xsl:with-param name="bloglist_list" select="$bloglist"/>
+          <xsl:with-param  name="subset-recent" select="$subset-recent"/>
+      </xsl:call-templates> -->
+      
     </div>
 
     <!-- END output the bloglist -->
@@ -2085,6 +2124,9 @@ or else only the first n items will be sorted -->
         </xsl:when>
         <xsl:when test="$format='dd-Mon-yy'">
           <xsl:value-of select="'d-M-y'"/>
+        </xsl:when>      
+        <xsl:when test="$format='dd_Mon_yyyy'">
+          <xsl:value-of select="'d M Y'"/>
         </xsl:when>
         <xsl:when test="$format='Weekday_Month_dd_yyyy'">
           <xsl:value-of select="'l F d Y'"/>
@@ -2170,4 +2212,99 @@ or else only the first n items will be sorted -->
     </xsl:for-each>
     <xsl:value-of select="$node/@name"/>
   </xsl:template>
+  
+<!--  ==================Recent posts widget==============================  -->
+  <xsl:template name="recent-posts">
+    <xsl:param name="recent"/>
+    <xsl:for-each select="exsl:node-set($recent)/blog">
+        <li>
+          <div class="thumb img-responsive" >
+          <xsl:choose>
+                    <xsl:when test="./image">
+                      <xsl:call-template name="render-image-as-img">
+                        <xsl:with-param name="src" select="./image/@src"/>
+                        <xsl:with-param name="width" select="50"/>
+                        <xsl:with-param name="height" select="50"/>
+                      </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:element name="img">
+                        <xsl:attribute name="src">
+                          <xsl:text>//placehold.it/330x210</xsl:text>
+                        </xsl:attribute>
+                      </xsl:element>
+                    </xsl:otherwise>
+          </xsl:choose>
+          </div>
+          <span class="post-info">
+            <a class="post-title" href="#"><xsl:value-of select="title"/></a> <br/>
+            <span class="date">
+              <xsl:call-template name="format-date-blog">
+                  <xsl:with-param name="date" select="./@date"/>
+                  <xsl:with-param name="format" select="'dd_Mon_yyyy'"/>
+              </xsl:call-template>
+            </span>
+          </span>
+        </li>
+    </xsl:for-each>
+  </xsl:template>
+  
+  
+<!-- =================SIDEBAR=======================   -->
+  <xsl:template name="blog-sidebar">
+<!--     <xsl:param name="bloglist"/> -->
+<!--     <xsl:param name="subset-recent"/> -->
+<!--     <xsl:param name="bloglist_list"/> -->
+    
+    <div class="col-md-3 blog-sidebar">
+        hello
+<!--         <section class="widget search">
+          <h3 class="sr-only title">Search Blog</h3>
+          <form class="search-blog-form">
+              <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search blog..."/>
+              </div>
+              <button type="submit" class="btn btn-cta btn-cta-secondary">
+                <i class="fa fa-search"></i>
+              </button>
+          </form>
+        </section> -->
+        <!--//search-->
+        
+<!--         <section class="widget recent-posts blog-filters">
+          <h3 class="title">Recent Posts</h3>
+          <ul class="list-unstyled">
+            
+          <xsl:call-template name="recent-posts" mode="meta">
+              <xsl:with-param name="recent" select="$subset-recent"/>
+          </xsl:call-template>
+             
+            
+          </ul>
+        </section>
+         -->
+<!--         <div class="blog-filters">
+          <div class="title">Categories</div>
+          <xsl:call-template name="output-category-list-from-blog-node" mode="meta">
+            <xsl:with-param name="bloglist" select="$bloglist"/>
+          </xsl:call-template>
+        </div>
+        <div class="blog-filters">
+          <div class="title">Years</div>
+          <xsl:call-template name="output-year-list-from-blog-node" mode="meta">
+            <xsl:with-param name="bloglist" select="$bloglist"/>
+          </xsl:call-template>
+        </div>
+        <div class="blog-filters">
+          <div class="title">Tags</div>
+          <xsl:call-template name="output-tag-list-from-blog-node" mode="meta">
+            <xsl:with-param name="bloglist" select="$bloglist"/>
+          </xsl:call-template>
+        </div> -->
+      
+      
+      </div>
+  
+  </xsl:template>
+  
 </xsl:stylesheet>]]></stylesheet>
