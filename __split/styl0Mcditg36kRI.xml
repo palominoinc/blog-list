@@ -1,0 +1,2173 @@
+<?xml version="1.0"?>
+<stylesheet id="styl0Mcditg36kRI" lang="any" name="blog-stylesheet" show-in="main" webpalschematype="wpAppStylesheet"><![CDATA[<?xml version="1.0"?>
+<!DOCTYPE xsl:stylesheet [
+<!ENTITY nbsp "&#160;" >
+]>
+<!-- -->
+<!-- (c) 2001-present All Copyrights Palomino System Innovations Inc.
+Illegal reproduction and disclosure will be prosecuted  -->
+
+<xsl:stylesheet
+                version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:wp="http://www.palominosys.com/wp"
+                xmlns:php="http://php.net/xsl"
+                xmlns:date="http://exslt.org/dates-and-times" 
+                xmlns:exsl="http://exslt.org/common"
+                extension-element-prefixes="exsl"
+                >
+
+  <!-- ========================================================================================= -->
+  <!-- =================================== bloglist templates ================================== -->
+  <!-- ========================================================================================= -->
+  <xsl:template match="bloglist" mode="homewidget">
+
+    <xsl:for-each select="./blog">   
+      
+      <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
+      
+      <xsl:variable name="blog-link">
+        <xsl:text>/about-us/blog?node=</xsl:text>
+        <xsl:value-of select="./@name" />
+      </xsl:variable>
+      
+      <xsl:if test="position() &lt; 3">
+        <h3><a href="{$blog-link}"><xsl:value-of select="title"/></a></h3>
+        <xsl:choose>
+          <xsl:when test="string-length(text) > 75">
+            <p class="standard"><xsl:value-of select="substring(text, 1, 75)" />...</p>
+          </xsl:when>
+          <xsl:otherwise>
+            <p class="standard"><xsl:value-of select="text" /></p>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </xsl:for-each>
+  </xsl:template>
+  <xsl:template match="bloglist">
+
+    <xsl:variable name="max-items">
+      <xsl:choose>
+        <xsl:when test="./@index='10-most-recent'"><xsl:value-of select="number(10)"/></xsl:when>
+        <xsl:when test="./@index='5-most-recent'"><xsl:value-of select="number(5)"/></xsl:when>
+        <xsl:when test="./@index='most-recent'"><xsl:value-of select="number(1)"/></xsl:when>
+        <xsl:when test="./@index='list-none'"><xsl:value-of select="number(0)"/></xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="items-per-page">
+      <xsl:value-of select="number(10)"/>
+    </xsl:variable>
+
+    <!-- We need to get a sorted list of the articles before we grab the subset,
+or else only the first n items will be sorted -->
+    <xsl:variable name="sorted-articles">
+      <xsl:for-each select="./blog">
+        <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
+        <xsl:choose>
+          <xsl:when test="./@archived and ./@archived = 'yes'">
+            <!-- do nothing -->
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="."/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:variable>
+    <!-- this subset represents the first page's items only -->
+    <xsl:variable name="subset">
+      <xsl:for-each select="exsl:node-set($sorted-articles)/blog[position() &lt;= $items-per-page]">
+        <xsl:copy-of select="."/>
+      </xsl:for-each>
+    </xsl:variable>
+    <!-- determine how many items there will be...-->
+    <xsl:variable name="num-items">
+      <xsl:value-of select="count(exsl:node-set($sorted-articles)/blog)"/>
+    </xsl:variable>
+    <!-- and determine how many pages we will need for them -->
+    <xsl:variable name="num-pages">
+      <xsl:value-of select="ceiling($num-items div $items-per-page)"/>
+    </xsl:variable>
+    <!-- START output the bloglist -->
+
+    <div class="row">
+      <div class="col-md-9">
+        <xsl:element name="div">
+          <xsl:attribute name="data-bloglist-id">
+            <xsl:value-of select="./@id"/>
+          </xsl:attribute>
+          <xsl:for-each select="exsl:node-set($subset)/blog">
+            <xsl:apply-templates select="." mode="img"/>
+          </xsl:for-each>
+          <xsl:element name="div">
+            <xsl:attribute name="class">
+              <xsl:text>pagination</xsl:text>
+            </xsl:attribute>
+            <!-- show which items we are display e.g. 1-10 -->
+            <xsl:element name="div">
+
+            </xsl:element>
+            <!-- END show which items -->
+            <!-- show prev button -->
+            <xsl:element name="button">
+              <!-- since page 1 will always be the first rendered,
+disable the prev button on first load -->
+              <xsl:attribute name="class">
+                <xsl:text>prev page btn disabled</xsl:text>
+              </xsl:attribute>
+              <xsl:value-of select="'&lt;'"/>
+            </xsl:element>
+            <!-- it's not easy to do a for-loop in xslt, so we place
+a single placeholder page. We give it a data attribute
+with the num-pages. We will access it with javascript
+and display the full pagination-->
+            <xsl:element name="button">
+              <xsl:attribute name="class">
+                <xsl:text>page btn</xsl:text>
+              </xsl:attribute>
+              <xsl:attribute name="data-page-num">
+                <xsl:value-of select="'1'"/>
+              </xsl:attribute>
+              <xsl:attribute name="data-num-pages">
+                <xsl:value-of select="$num-pages"/>
+              </xsl:attribute>
+              <xsl:value-of select="'1'"/>
+            </xsl:element>
+            <!-- TODO output an element for each page number -->
+            <!-- show next button -->
+            <xsl:element name="button">
+              <xsl:attribute name="class">
+                <xsl:text>next page btn</xsl:text>
+              </xsl:attribute>
+              <xsl:attribute name="data-page-num">
+                <xsl:text>2</xsl:text>
+              </xsl:attribute>
+              <xsl:value-of select="'&gt;'"/>
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
+      </div>
+      <div class="col-md-3 blog-sidebar">
+        
+        
+        
+        <div class="blog-filters">
+          <div class="title">Categories</div>
+          <xsl:call-template name="output-category-list-from-blog-node" mode="meta">
+            <xsl:with-param name="bloglist" select="."/>
+          </xsl:call-template>
+        </div>
+        <div class="blog-filters">
+          <div class="title">Years</div>
+          <xsl:call-template name="output-year-list-from-blog-node" mode="meta">
+            <xsl:with-param name="bloglist" select="."/>
+          </xsl:call-template>
+        </div>
+        <div class="blog-filters">
+          <div class="title">Tags</div>
+          <xsl:call-template name="output-tag-list-from-blog-node" mode="meta">
+            <xsl:with-param name="bloglist" select="."/>
+          </xsl:call-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- END output the bloglist -->
+    <!--     <script src="/resources/Bloglist/js/bloglist.js"></script> -->
+    <script src="?f=extensions/bloglist/Bloglist/Resources/js/bloglist.js"></script>
+  </xsl:template>
+
+  <!--   <xsl:apply-templates select="./text" mode="placeholder"/> -->
+  <xsl:template match="node()|@*" mode="placeholder">
+    <xsl:choose>
+      <xsl:when test="name(.)='img'">
+        <xsl:apply-templates select="." mode="placeholder"/>
+      </xsl:when>
+      <xsl:when test="count(./*) &gt; 0">
+        <xsl:copy>
+          <xsl:apply-templates select="node()|@*" mode="placeholder"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="." mode="html"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  <xsl:template match="blog/text" mode="placeholder">
+    <!-- Get the transformed XML -->
+    <!--     <xsl:variable name="transformed-data">
+<xsl:apply-templates select="." mode="html"/>
+</xsl:variable>
+<xsl:variable name="converted-data">
+<xsl:call-template name="html-with-placeholder-img">
+<xsl:with-param name="data" select="$transformed-data"/>
+</xsl:call-template>
+</xsl:variable>
+<xsl:copy-of select="$converted-data"/> -->
+    <xsl:apply-templates select="./*" mode="placeholder"/>
+  </xsl:template>
+  <xsl:template name="html-with-placeholder-img">
+    <xsl:param name="data"/>
+    <xsl:for-each select="exsl:node-set($data)/text/*">
+      <xsl:copy-of select="."/>
+    </xsl:for-each>
+  </xsl:template>
+
+
+  <xsl:template match="img" mode="placeholder">
+    <xsl:element name="div">
+      This is an img!!
+    </xsl:element>
+  </xsl:template>
+
+
+  <xsl:template match="blog" mode="img">
+    <xsl:variable name="blog-link">
+      <xsl:value-of select="$PATH"/>
+      <xsl:text>?node=</xsl:text>
+      <xsl:value-of select="./@name"/>
+    </xsl:variable>
+    
+    <xsl:variable name="blog-text">
+      <!--         <xsl:apply-templates select="./text"/> -->
+      <xsl:variable name="text">
+        <xsl:apply-templates select="./text"/>
+      </xsl:variable>
+      <xsl:for-each select="exsl:node-set($text)/*">
+        <xsl:value-of select="."/>
+        <xsl:if test="string-length(.)=0">
+          <xsl:text>. </xsl:text>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="blog-summary">
+      <xsl:value-of select="concat(substring($blog-text, 0, 300), '...')"/>
+    </xsl:variable>
+
+    <xsl:element name="article">
+      <div class="blogPost">
+        <!--START header-->
+        <xsl:element name="div">
+          <xsl:attribute name="class">
+            <xsl:text>blogheader</xsl:text>
+          </xsl:attribute>
+          <!--title-->
+          <xsl:element name="h2">
+            <xsl:element name="a">
+              <xsl:attribute name="href">
+                <xsl:value-of select="$blog-link"/>
+              </xsl:attribute>
+              <xsl:value-of select="./title"/>
+            </xsl:element>
+          </xsl:element>
+          <!--START .meta-line-->
+          <xsl:element name="div">
+            <xsl:attribute name="class">
+              <xsl:text>meta-line clearfix</xsl:text>
+            </xsl:attribute>
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>pull-left</xsl:text>
+              </xsl:attribute>
+
+              <!--author-->
+              <!--             <xsl:element name="span">
+<xsl:attribute name="class">
+<xsl:text>meta-author</xsl:text>
+</xsl:attribute> -->
+              <!--START author icon-->
+              <!--               <i class="fa fa-user"></i> -->
+              <!--END author icon-->
+              <!--               <xsl:text>Author: </xsl:text>
+<xsl:choose>
+<xsl:when test="./author">
+<xsl:value-of select="./author"/>
+</xsl:when>
+<xsl:otherwise>
+<xsl:text>BDDC</xsl:text>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:element> -->
+
+              <!--category-->
+              <xsl:element name="span">
+                <xsl:attribute name="class">
+                  <xsl:text>meta-category</xsl:text>
+                </xsl:attribute>
+                <!--START category icon-->
+                <!--               <i class="fa fa-archive"></i> -->
+                <!--END category icon-->
+                <xsl:text>In: </xsl:text>
+                <xsl:element name="ul">
+                  <!-- main category -->
+                  <xsl:if test="./categories/main-category">
+                    <xsl:variable name="main-category-link">
+                      <!--                     <xsl:value-of select="$PATH"/> -->
+                      <xsl:text>#category=</xsl:text>
+                      <xsl:value-of select="./categories/main-category"/>
+                    </xsl:variable>
+                    <xsl:element name="li">
+                      <xsl:attribute name="class">
+                        <xsl:text>main-category</xsl:text>
+                      </xsl:attribute>
+                      <xsl:attribute name="style">display:inline-block;</xsl:attribute>
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$main-category-link"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-type">
+                          <xsl:text>category</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-value">
+                          <xsl:value-of select="./categories/main-category"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="./categories/main-category"/>
+                      </xsl:element>
+                    </xsl:element>
+                  </xsl:if>
+                  <xsl:choose>
+                    <xsl:when test="count(./categories/*) &gt; 1">
+
+                      <xsl:for-each select="./categories/category">
+                        <!--TODO: Create category link properly-->
+                        <xsl:variable name="category-link">
+                          <!--                         <xsl:value-of select="$PATH"/> -->
+                          <xsl:text>#category=</xsl:text>
+                          <xsl:value-of select="."/>
+                        </xsl:variable>
+                        <xsl:element name="li">
+                          <xsl:attribute name="class">
+                            <xsl:text>category</xsl:text>
+                          </xsl:attribute>
+                          <xsl:attribute name="style">display:inline-block;</xsl:attribute>
+                          <xsl:element name="a">
+                            <xsl:attribute name="href">
+                              <xsl:value-of select="$category-link"/>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-filter-type">
+                              <xsl:text>category</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-filter-value">
+                              <xsl:value-of select="."/>
+                            </xsl:attribute>
+                            <xsl:value-of select="."/>
+                          </xsl:element>
+                        </xsl:element>
+                      </xsl:for-each>
+
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <!--                     <i>None</i> -->
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:element>
+              </xsl:element>
+            </xsl:element>
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>pull-right</xsl:text>
+              </xsl:attribute>
+              <!--tags-->
+              <xsl:element name="ul">
+                <xsl:attribute name="class">
+                  <xsl:text>meta-tags</xsl:text>
+                </xsl:attribute>
+                  <!--START tag icon-->
+                  <xsl:choose>
+                    <xsl:when test="count(./tags/*) &gt; 0">
+                      <i class="fa fa-tags"></i>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <!--                     <i class="fa fa-tag"></i> -->
+                      <!--                     <i class="fa fa-tag"></i><i>None</i> -->
+                    </xsl:otherwise>
+                  </xsl:choose>
+                  <!--END tag icon-->
+                  <xsl:for-each select="./tags/*">
+                    <!--TODO: Create xsl tag link properly-->
+                    <xsl:variable name="tag-link">
+                      <!--                     <xsl:value-of select="$PATH"/> -->
+                      <xsl:text>#tag=</xsl:text>
+                      <xsl:value-of select="."/>
+                    </xsl:variable>
+                    <xsl:element name="li">
+                      <xsl:attribute name="class">
+                        <xsl:text>tag</xsl:text>
+                      </xsl:attribute>
+                      <xsl:attribute name="style">display:inline-block;</xsl:attribute>
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$tag-link"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-type">
+                          <xsl:text>tag</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-value">
+                          <xsl:value-of select="."/>
+                        </xsl:attribute>
+                        <xsl:value-of select="."/>
+                      </xsl:element>
+                    </xsl:element>
+                  </xsl:for-each>
+              </xsl:element>
+            </xsl:element>
+            <!--END .meta-line-->
+          </xsl:element>
+        </xsl:element>
+        <!--END header-->
+        <!--START .entry-content-->
+        <xsl:element name="div">
+          <xsl:attribute name="class">
+            <xsl:text>entry-content</xsl:text>
+          </xsl:attribute>
+          <!--START .row-->
+          <xsl:element name="div">
+            <xsl:attribute name="class">
+              <xsl:text>row</xsl:text>
+            </xsl:attribute>
+            <!--START .col-sm-5-->
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>col-md-5</xsl:text>
+              </xsl:attribute>
+              <!--START figure.blog-image-->
+              <xsl:element name="figure">
+                <xsl:attribute name="class">
+                  <xsl:text>blog-image</xsl:text>
+                </xsl:attribute>
+                <xsl:element name="a">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="$blog-link"/>
+                  </xsl:attribute>
+                  <!--date-->
+                  <xsl:element name="div">
+                    <xsl:attribute name="class">
+                      <xsl:text>blog-date-info</xsl:text>
+                    </xsl:attribute>
+                    <xsl:element name="span">
+                      <xsl:attribute name="class">
+                        <xsl:text>blog-month</xsl:text>
+                      </xsl:attribute>
+                      <xsl:call-template name="format-date-blog">
+                        <xsl:with-param name="date" select="./@date"/>
+                        <xsl:with-param name="format" select="'MMM'"/>
+                      </xsl:call-template>
+                    </xsl:element>
+                    <xsl:element name="span">
+                      <xsl:attribute name="class">
+                        <xsl:text>blog-day</xsl:text>
+                      </xsl:attribute>
+                      <xsl:call-template name="format-date-blog">
+                        <xsl:with-param name="date" select="./@date"/>
+                        <xsl:with-param name="format" select="'D'"/>
+                      </xsl:call-template>
+                    </xsl:element>
+                    <xsl:element name="span">
+                      <xsl:attribute name="class">
+                        <xsl:text>blog-year</xsl:text>
+                      </xsl:attribute>
+                      <xsl:call-template name="format-date-blog">
+                        <xsl:with-param name="date" select="./@date"/>
+                        <xsl:with-param name="format" select="'YYYY'"/>
+                      </xsl:call-template>
+                    </xsl:element>
+                  </xsl:element>
+                  <!--image-->
+                  <xsl:choose>
+                    <xsl:when test="./image">
+                      <xsl:call-template name="render-image-as-img">
+                        <xsl:with-param name="src" select="./image/@src"/>
+                        <xsl:with-param name="width" select="330"/>
+                        <xsl:with-param name="height" select="210"/>
+                      </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:element name="img">
+                        <xsl:attribute name="src">
+                          <xsl:text>//placehold.it/330x210</xsl:text>
+                        </xsl:attribute>
+                      </xsl:element>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:element>
+              </xsl:element>
+              <!--END figure.blog-image-->
+            </xsl:element>
+            <!--END .col-sm-5-->
+            <!--START .col-sm-7-->
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>col-md-7</xsl:text>
+              </xsl:attribute>
+              <xsl:element name="div">
+                <xsl:attribute name="class">
+                  <xsl:text>blog-summary</xsl:text>
+                </xsl:attribute>
+                <!--summary-->
+                <xsl:element name="p">
+                  <xsl:value-of select="$blog-summary"/>
+                </xsl:element>
+                <!--read more-->
+                <xsl:element name="p">
+                  <xsl:attribute name="class">
+                    <xsl:text>read-more</xsl:text>
+                  </xsl:attribute>
+                  <xsl:element name="a">
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="$blog-link"/>
+                    </xsl:attribute>
+                    <xsl:text>Read More</xsl:text>
+                  </xsl:element>
+                </xsl:element>
+              </xsl:element>
+            </xsl:element>
+            <!--END .col-sm-7-->
+          </xsl:element>
+          <!--START .col-sm-12-->
+          <xsl:element name="div">
+            <xsl:attribute name="class">
+              <xsl:text>col-sm-12</xsl:text>
+            </xsl:attribute>
+            <!--           <xsl:apply-templates select="./text" mode="placeholder"/> -->
+          </xsl:element>
+          <!--END .row-->
+        </xsl:element>
+        <!--END .entry-content-->
+      </div>
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template name="render-image-as-img">
+    <xsl:param name="src"/>
+    <xsl:param name="width" select="''"/>
+    <xsl:param name="height" select="''"/>
+    <xsl:param name="class" select="''"/>
+
+    <xsl:variable name="size">
+      <xsl:choose>
+        <xsl:when test="$width and not($width = '') and $height and not($height = '')">
+          <xsl:value-of select="$width"/>
+          <xsl:text>x</xsl:text>
+          <xsl:value-of select="$height"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:element name="img">
+      <xsl:attribute name="src">
+        <xsl:value-of select="concat('?f=', $src)"/>
+        <xsl:if test="$size">
+          <xsl:value-of select="concat('&amp;resize=', $size)"/>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:if test="$class and $class != ''">
+        <xsl:attribute name="class">
+          <xsl:value-of select="$class"/>
+        </xsl:attribute>
+      </xsl:if>
+    </xsl:element>
+  </xsl:template>
+  <xsl:template name="include-bloglist-js">
+    <script src="/resources/Bloglist/js/bloglist.js"></script>
+  </xsl:template>
+
+  <!-- output a list of years with articles and the amount of articles in that year -->
+  <!-- @name: output-year-list
+@usage: call-template name="output-year-list"
+@params: bloglist (the bloglist node to use)
+-->
+  <xsl:template name="output-year-list" mode="meta">
+    <xsl:param name="bloglist"/>
+    <!-- This is kinda hacky. Not actually using a for loop here.
+Since <xsl:call-template> does not change our context,
+we "force" a context change by passing the bloglist in as
+a param and then calling <xsl:for-each> on it. This allows us
+to use '.' to access it directly. -->
+    <xsl:for-each select="exsl:node-set($bloglist)">
+      <!-- We grab all years... -->
+      <xsl:variable name="all-years">
+        <xsl:for-each select="./blog[not(@archived) or @archived != 'yes']">
+          <xsl:element name="year">
+            <xsl:call-template name="format-date-blog">
+              <xsl:with-param name="format" select="'YYYY'"/>
+              <xsl:with-param name="date" select="./@date"/>
+            </xsl:call-template>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+      <!-- And filter out the unique ones, and count them... -->
+      <xsl:variable name="unique-years">
+        <xsl:for-each select="exsl:node-set($all-years)/year[not(. = preceding-sibling::year)]">
+          <xsl:variable name="this-year" select="."/>
+          <xsl:element name="year">
+            <xsl:attribute name="count">
+              <xsl:value-of select="count(exsl:node-set($all-years)/year[text() = $this-year/text()])"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+      <!--output the list-->
+      <ul class="blog-by-year">
+        <xsl:for-each select="exsl:node-set($unique-years)/year">
+          <xsl:sort select="." order="descending"/>
+          <li>
+
+            <xsl:element name="a">
+              <xsl:attribute name="href">
+                <!--                   <xsl:value-of select="$PATH"/> -->
+                <xsl:text>#year=</xsl:text>
+                <xsl:value-of select="."/>
+              </xsl:attribute>
+              <xsl:attribute name="data-filter-type">
+                <xsl:text>year</xsl:text>
+              </xsl:attribute>
+              <xsl:attribute name="data-filter-value">
+                <xsl:value-of select="."/>
+              </xsl:attribute>
+              <xsl:value-of select="."/>
+              <span class="count">
+                <xsl:value-of select="'('"/>
+                <xsl:value-of select="./@count"/>
+                <xsl:value-of select="')'"/>
+              </span>
+            </xsl:element>
+          </li>
+        </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+  </xsl:template>
+  <xsl:template name="output-year-list-from-blog-node" mode="meta">
+    <xsl:param name="bloglist"/>
+    <!-- This is kinda hacky. Not actually using a for loop here.
+Since <xsl:call-template> does not change our context,
+we "force" a context change by passing the bloglist in as
+a param and then calling <xsl:for-each> on it. This allows us
+to use '.' to access it directly. -->
+    <xsl:for-each select="exsl:node-set($bloglist)">
+      <!-- We grab all years... -->
+      <xsl:variable name="all-years">
+        <xsl:for-each select="./blog[not(@archived) or @archived != 'yes']">
+          <xsl:sort select="substring(./@date,7)" order="descending"/>
+          <xsl:element name="year">
+            <xsl:call-template name="format-date-blog">
+              <xsl:with-param name="format" select="'YYYY'"/>
+              <xsl:with-param name="date" select="./@date"/>
+            </xsl:call-template>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+      <!-- And filter out the unique ones, and count them... -->
+      <xsl:variable name="unique-years">
+        <xsl:for-each select="exsl:node-set($all-years)/year[not(. = preceding-sibling::year)]">
+          <xsl:variable name="this-year" select="."/>
+          <xsl:element name="year">
+            <xsl:attribute name="count">
+              <xsl:value-of select="count(exsl:node-set($all-years)/year[text() = $this-year/text()])"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+      <!--output the list-->
+      <ul class="blog-by-year">
+        <xsl:for-each select="exsl:node-set($unique-years)/year">
+          <xsl:sort select="." order="descending"/>
+          <li>
+
+            <xsl:element name="a">
+              <xsl:attribute name="href">
+                <xsl:value-of select="$PATH"/>
+                <xsl:text>#year=</xsl:text>
+                <xsl:value-of select="."/>
+              </xsl:attribute>
+              <xsl:attribute name="data-filter-type">
+                <xsl:text>year</xsl:text>
+              </xsl:attribute>
+              <xsl:attribute name="data-filter-value">
+                <xsl:value-of select="."/>
+              </xsl:attribute>
+              <xsl:value-of select="."/>
+              <span class="count">
+                <xsl:value-of select="'('"/>
+                <xsl:value-of select="./@count"/>
+                <xsl:value-of select="')'"/>
+              </span>
+            </xsl:element>
+            
+          </li>
+        </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+  </xsl:template>
+  <xsl:template name="output-tag-list" mode="meta">
+    <xsl:param name="bloglist"/>
+    <!-- This is kinda hacky. Not actually using a for loop here.
+Since <xsl:call-template> does not change our context,
+we "force" a context change by passing the bloglist in as
+a param and then calling <xsl:for-each> on it. This allows us
+to use '.' to access it directly. -->
+    <xsl:for-each select="exsl:node-set($bloglist)">
+      <!-- We grab all years... -->
+      <xsl:variable name="all-tags">
+        <xsl:for-each select="./blog[not(@archived) or @archived != 'yes']/tags/tag">
+          <xsl:element name="tag">
+            <xsl:attribute name="value">
+              <xsl:value-of select="translate(./text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+      <!-- And filter out the unique ones, and count them... -->
+      <xsl:variable name="unique-tags">
+        <xsl:for-each select="exsl:node-set($all-tags)/tag[not(./@value = preceding-sibling::tag/@value)]">
+          <xsl:variable name="this-tag" select="."/>
+          <xsl:element name="tag">
+            <xsl:attribute name="count">
+              <xsl:value-of select="count(exsl:node-set($all-tags)/tag[./@value = $this-tag/@value])"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+      <!--output the list-->
+      <ul class="blog-by-tag">
+        <xsl:for-each select="exsl:node-set($unique-tags)/tag">
+          <xsl:if test="./text() != ''">
+            <li>
+              <xsl:element name="a">
+                <xsl:attribute name="href">
+                  <!--                   <xsl:value-of select="$PATH"/> -->
+                  <xsl:text>#tag=</xsl:text>
+                  <xsl:value-of select="."/>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-type">
+                  <xsl:text>tag</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-value">
+                  <xsl:value-of select="."/>
+                </xsl:attribute>
+                <xsl:value-of select="."/>
+                <span class="count">
+                  <xsl:value-of select="'('"/>
+                  <xsl:value-of select="./@count"/>
+                  <xsl:value-of select="')'"/>
+                </span>
+              </xsl:element>
+            </li>
+          </xsl:if>
+        </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+  </xsl:template>
+  <xsl:template name="output-tag-list-from-blog-node" mode="meta">
+    <xsl:param name="bloglist"/>
+    <!-- This is kinda hacky. Not actually using a for loop here.
+Since <xsl:call-template> does not change our context,
+we "force" a context change by passing the bloglist in as
+a param and then calling <xsl:for-each> on it. This allows us
+to use '.' to access it directly. -->
+    <xsl:for-each select="exsl:node-set($bloglist)">
+      <!-- We grab all years... -->
+      <xsl:variable name="all-tags">
+        <xsl:for-each select="./blog/tags/tag">
+          <xsl:element name="tag">
+            <xsl:attribute name="value">
+              <xsl:value-of select="translate(./text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+      <!-- And filter out the unique ones, and count them... -->
+      <xsl:variable name="unique-tags">
+        <xsl:for-each select="exsl:node-set($all-tags)/tag[not(./@value = preceding-sibling::tag/@value)]">
+          <xsl:variable name="this-tag" select="."/>
+          <xsl:element name="tag">
+            <xsl:attribute name="count">
+              <xsl:value-of select="count(exsl:node-set($all-tags)/tag[./@value = $this-tag/@value])"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+      <!--output the list-->
+      <ul class="blog-by-tag">
+        <xsl:for-each select="exsl:node-set($unique-tags)/tag">
+          <xsl:if test="./text() != ''">
+            <li>
+              <xsl:element name="a">
+                <xsl:attribute name="href">
+                  <xsl:value-of select="$PATH"/>
+                  <xsl:text>#tag=</xsl:text>
+                  <xsl:value-of select="."/>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-type">
+                  <xsl:text>tag</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-value">
+                  <xsl:value-of select="."/>
+                </xsl:attribute>
+                <xsl:value-of select="."/>
+                <span class="count">
+                  <xsl:value-of select="'('"/>
+                  <xsl:value-of select="./@count"/>
+                  <xsl:value-of select="')'"/>
+                </span>
+              </xsl:element>
+            </li>
+          </xsl:if>
+        </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+  </xsl:template>
+  <xsl:template name="output-category-list" mode="meta">
+
+    <xsl:param name="bloglist"/>
+    <!-- This is kinda hacky. Not actually using a for loop here.
+Since <xsl:call-template> does not change our context,
+we "force" a context change by passing the bloglist in as
+a param and then calling <xsl:for-each> on it. This allows us
+to use '.' to access it directly. -->
+    <xsl:for-each select="exsl:node-set($bloglist)">
+      <!-- we define $uppercase and $lowercase variables for our hack
+to convert strings to lowercase 
+example call to convert a string to lowercase (within a select statement:
+translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
+      <xsl:variable name="uppercase" value="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+      <xsl:variable name="lowercase" value="'abcdefghijklmnopqrstuvwxyz'"/>
+      <xsl:variable name="lowercase-duplicate-main-categories-with-duplicate-sub-categories">
+        <xsl:for-each select="./blog[not(@archived) or @archived !='yes']/categories">
+          <xsl:choose>
+            <xsl:when test="./main-category and ./category">
+              <!--main-category with sub-categories -->
+              <xsl:element name="main-category">
+                <xsl:variable name="main-category-value" select="./main-category/text()"/>
+                <xsl:attribute name="value">
+                  <xsl:value-of select="translate($main-category-value,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                </xsl:attribute>
+                <xsl:value-of select="./main-category"/>
+                <xsl:for-each select="./category">
+                  <xsl:element name="category">
+                    <xsl:attribute name="value">
+                      <xsl:value-of select="translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="."/>
+                  </xsl:element>
+                </xsl:for-each>
+              </xsl:element>
+            </xsl:when>
+            <xsl:when test="./main-category">
+              <!--main-category with no sub-categories -->
+              <xsl:element name="main-category">
+                <xsl:attribute name="value">
+                  <xsl:value-of select="translate(./main-category,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                </xsl:attribute>
+                <xsl:value-of select="./main-category"/>
+              </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+              <!-- pull in category and give it a value attribute -->
+              <xsl:for-each select="./category">
+                <xsl:element name="category">
+                  <xsl:attribute name="value">
+                    <xsl:value-of select="translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                  </xsl:attribute>
+                  <xsl:value-of select="."/>
+                </xsl:element>
+              </xsl:for-each>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-top-level-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/category[not(./@value = preceding-sibling::category/@value)]">
+          <xsl:copy-of select="."/>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-counted-main-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[not(./@value = preceding-sibling::main-category/@value)]">
+          <xsl:variable name="this-main-category" select="."/>
+          <xsl:element name="main-category">
+            <xsl:attribute name="value">
+              <xsl:value-of select="./@value"/>
+            </xsl:attribute>
+            <xsl:attribute name="count">
+              <xsl:value-of select="count(exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[./@value = $this-main-category/@value])"/>
+            </xsl:attribute>
+            <xsl:value-of select="./text()"/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-duplicate-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)//category">
+          <xsl:copy-of select="."/>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-counted-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-duplicate-categories)//category[not(./@value = preceding-sibling::category/@value)]">
+          <xsl:variable name="this-category" select="."/>
+          <xsl:element name="category">
+            <xsl:attribute name="value">
+              <xsl:value-of select="./@value"/>
+            </xsl:attribute>
+            <xsl:attribute name="count">
+              <xsl:value-of select="count(exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)//category[./@value = $this-category/@value])"/>
+            </xsl:attribute>
+            <xsl:value-of select="./text()"/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-counted-main-categories-with-unique-sub-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-unique-counted-main-categories)/main-category">
+          <xsl:variable name="this-main-category" select="."/>
+          <xsl:element name="main-category">
+            <xsl:attribute name="value">
+              <xsl:value-of select="./@value"/>
+            </xsl:attribute>
+            <xsl:attribute name="count">
+              <xsl:value-of select="./@count"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+            <xsl:for-each select="exsl:node-set($lowercase-unique-counted-categories)/category">
+              <xsl:variable name="this-category" select="."/>
+              <xsl:if test="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[./@value = $this-main-category/@value]/category[./@value = $this-category/@value]">
+                <xsl:element name="category">
+                  <xsl:attribute name="value">
+                    <xsl:value-of select="$this-category/@value"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="count">
+                    <xsl:value-of select="$this-category/@count"/>
+                  </xsl:attribute>
+                  <xsl:value-of select="$this-category"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-counted-top-level-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-unique-top-level-categories)/category">
+          <xsl:variable name="this-category" select="."/>
+          <xsl:copy-of select="exsl:node-set($lowercase-unique-counted-categories)/category[./@value = $this-category/@value]"/>
+        </xsl:for-each>
+      </xsl:variable>
+      <!--output the list-->
+      <ul class="blog-by-category">
+        <xsl:for-each select="exsl:node-set($lowercase-unique-counted-main-categories-with-unique-sub-categories)/main-category">
+          <xsl:if test="not(./text() = '')">
+            <li>
+              <xsl:element name="a">
+                <xsl:attribute name="href">
+                  <xsl:text>#category=</xsl:text>
+                  <xsl:value-of select="./@value"/>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-type">
+                  <xsl:text>category</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-value">
+                  <xsl:value-of select="./@value"/>
+                </xsl:attribute>
+                <xsl:value-of select="./text()"/>
+                <span class="count">
+                  <xsl:value-of select="'('"/>
+                  <xsl:value-of select="./@count"/>
+                  <xsl:value-of select="')'"/>
+                </span>
+              </xsl:element>
+              <xsl:if test="./category">
+                <ul>
+                  <xsl:for-each select="./category">
+                    <li>
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <!--                   <xsl:value-of select="$PATH"/> -->
+                          <xsl:text>#category=</xsl:text>
+                          <xsl:value-of select="./@value"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-type">
+                          <xsl:text>category</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-value">
+                          <xsl:value-of select="./@value"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="./text()"/>
+                        <span class="count">
+                          <xsl:value-of select="'('"/>
+                          <xsl:value-of select="./@count"/>
+                          <xsl:value-of select="')'"/>
+                        </span>
+                      </xsl:element>
+                    </li>
+                  </xsl:for-each>
+                </ul>
+              </xsl:if>
+
+            </li>
+          </xsl:if>
+        </xsl:for-each>
+        <xsl:for-each select="exsl:node-set($lowercase-unique-counted-top-level-categories)">
+          <xsl:if test="not(./text() = '')">
+            <li>
+              <xsl:element name="a">
+                <xsl:attribute name="href">
+                  <xsl:text>#category=</xsl:text>
+                  <xsl:value-of select="./@value"/>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-type">
+                  <xsl:text>category</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-value">
+                  <xsl:value-of select="./@value"/>
+                </xsl:attribute>
+                <xsl:value-of select="./text()"/>
+                <span class="count">
+                  <xsl:value-of select="'('"/>
+                  <xsl:value-of select="./@count"/>
+                  <xsl:value-of select="')'"/>
+                </span>
+              </xsl:element>
+            </li>
+          </xsl:if>
+        </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+  </xsl:template>
+  <xsl:template name="output-category-list-from-blog-node" mode="meta">
+
+    <xsl:param name="bloglist"/>
+    <!-- This is kinda hacky. Not actually using a for loop here.
+Since <xsl:call-template> does not change our context,
+we "force" a context change by passing the bloglist in as
+a param and then calling <xsl:for-each> on it. This allows us
+to use '.' to access it directly. -->
+    <xsl:for-each select="exsl:node-set($bloglist)">
+      <!-- we define $uppercase and $lowercase variables for our hack
+to convert strings to lowercase 
+example call to convert a string to lowercase (within a select statement:
+translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
+      <xsl:variable name="uppercase" value="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+      <xsl:variable name="lowercase" value="'abcdefghijklmnopqrstuvwxyz'"/>
+      <xsl:variable name="lowercase-duplicate-main-categories-with-duplicate-sub-categories">
+        <xsl:for-each select="./blog/categories">
+          <xsl:choose>
+            <xsl:when test="./main-category and ./category">
+              <!--main-category with sub-categories -->
+              <xsl:element name="main-category">
+                <xsl:variable name="main-category-value" select="./main-category/text()"/>
+                <xsl:attribute name="value">
+                  <xsl:value-of select="translate($main-category-value,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                </xsl:attribute>
+                <xsl:value-of select="./main-category"/>
+                <xsl:for-each select="./category">
+                  <xsl:element name="category">
+                    <xsl:attribute name="value">
+                      <xsl:value-of select="translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="."/>
+                  </xsl:element>
+                </xsl:for-each>
+              </xsl:element>
+            </xsl:when>
+            <xsl:when test="./main-category">
+              <!--main-category with no sub-categories -->
+              <xsl:element name="main-category">
+                <xsl:attribute name="value">
+                  <xsl:value-of select="translate(./main-category,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                </xsl:attribute>
+                <xsl:value-of select="./main-category"/>
+              </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+              <!-- pull in category and give it a value attribute -->
+              <xsl:for-each select="./category">
+                <xsl:element name="category">
+                  <xsl:attribute name="value">
+                    <xsl:value-of select="translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                  </xsl:attribute>
+                  <xsl:value-of select="."/>
+                </xsl:element>
+              </xsl:for-each>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-top-level-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/category[not(./@value = preceding-sibling::category/@value)]">
+          <xsl:copy-of select="."/>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-counted-main-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[not(./@value = preceding-sibling::main-category/@value)]">
+          <xsl:variable name="this-main-category" select="."/>
+          <xsl:element name="main-category">
+            <xsl:attribute name="value">
+              <xsl:value-of select="./@value"/>
+            </xsl:attribute>
+            <xsl:attribute name="count">
+              <xsl:value-of select="count(exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[./@value = $this-main-category/@value])"/>
+            </xsl:attribute>
+            <xsl:value-of select="./text()"/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-duplicate-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)//category">
+          <xsl:copy-of select="."/>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-counted-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-duplicate-categories)//category[not(./@value = preceding-sibling::category/@value)]">
+          <xsl:variable name="this-category" select="."/>
+          <xsl:element name="category">
+            <xsl:attribute name="value">
+              <xsl:value-of select="./@value"/>
+            </xsl:attribute>
+            <xsl:attribute name="count">
+              <xsl:value-of select="count(exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)//category[./@value = $this-category/@value])"/>
+            </xsl:attribute>
+            <xsl:value-of select="./text()"/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-counted-main-categories-with-unique-sub-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-unique-counted-main-categories)/main-category">
+          <xsl:variable name="this-main-category" select="."/>
+          <xsl:element name="main-category">
+            <xsl:attribute name="value">
+              <xsl:value-of select="./@value"/>
+            </xsl:attribute>
+            <xsl:attribute name="count">
+              <xsl:value-of select="./@count"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+            <xsl:for-each select="exsl:node-set($lowercase-unique-counted-categories)/category">
+              <xsl:variable name="this-category" select="."/>
+              <xsl:if test="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[./@value = $this-main-category/@value]/category[./@value = $this-category/@value]">
+                <xsl:element name="category">
+                  <xsl:attribute name="value">
+                    <xsl:value-of select="$this-category/@value"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="count">
+                    <xsl:value-of select="$this-category/@count"/>
+                  </xsl:attribute>
+                  <xsl:value-of select="$this-category"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="lowercase-unique-counted-top-level-categories">
+        <xsl:for-each select="exsl:node-set($lowercase-unique-top-level-categories)/category">
+          <xsl:variable name="this-category" select="."/>
+          <xsl:copy-of select="exsl:node-set($lowercase-unique-counted-categories)/category[./@value = $this-category/@value]"/>
+        </xsl:for-each>
+      </xsl:variable>
+      <!--output the list-->
+      <ul class="blog-by-category">
+        <xsl:for-each select="exsl:node-set($lowercase-unique-counted-main-categories-with-unique-sub-categories)/main-category">
+          <xsl:if test="not(./text() = '')">
+            <li>
+              <xsl:element name="a">
+                <xsl:attribute name="href">
+                  <xsl:value-of select="$PATH"/>
+                  <xsl:text>#category=</xsl:text>
+                  <xsl:value-of select="./@value"/>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-type">
+                  <xsl:text>category</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-value">
+                  <xsl:value-of select="./@value"/>
+                </xsl:attribute>
+                <xsl:value-of select="./text()"/>
+                <span class="count">
+                  <xsl:value-of select="'('"/>
+                  <xsl:value-of select="./@count"/>
+                  <xsl:value-of select="')'"/>
+                </span>
+              </xsl:element>
+              <xsl:if test="./category">
+                <ul>
+                  <xsl:for-each select="./category">
+                    <li>
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$PATH"/>
+                          <xsl:text>#category=</xsl:text>
+                          <xsl:value-of select="./@value"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-type">
+                          <xsl:text>category</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-value">
+                          <xsl:value-of select="./@value"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="./text()"/>
+                        <span class="count">
+                          <xsl:value-of select="'('"/>
+                          <xsl:value-of select="./@count"/>
+                          <xsl:value-of select="')'"/>
+                        </span>
+                      </xsl:element>
+                    </li>
+                  </xsl:for-each>
+                </ul>
+              </xsl:if>
+
+            </li>
+          </xsl:if>
+        </xsl:for-each>
+        <xsl:for-each select="exsl:node-set($lowercase-unique-counted-top-level-categories)">
+          <xsl:if test="not(./text() = '')">
+            <li>
+              <xsl:element name="a">
+                <xsl:attribute name="href">
+                  <xsl:text>#category=</xsl:text>
+                  <xsl:value-of select="./@value"/>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-type">
+                  <xsl:text>category</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="data-filter-value">
+                  <xsl:value-of select="./@value"/>
+                </xsl:attribute>
+                <xsl:value-of select="./text()"/>
+                <span class="count">
+                  <xsl:value-of select="'('"/>
+                  <xsl:value-of select="./@count"/>
+                  <xsl:value-of select="')'"/>
+                </span>
+              </xsl:element>
+            </li>
+          </xsl:if>
+        </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+  </xsl:template>
+
+
+
+
+  <xsl:template match="bloglist" mode="default">
+
+    <!-- variable definitions -->
+
+    <xsl:variable name="max-items">
+      <xsl:choose>
+        <xsl:when test="./@index='10-most-recent'"><xsl:value-of select="number(10)"/></xsl:when>
+        <xsl:when test="./@index='5-most-recent'"><xsl:value-of select="number(5)"/></xsl:when>
+        <xsl:when test="./@index='most-recent'"><xsl:value-of select="number(1)"/></xsl:when>
+        <xsl:when test="./@index='list-none'"><xsl:value-of select="number(0)"/></xsl:when>
+        <xsl:when test="./@index='breaking-blog-only'"><xsl:value-of select="count(blog[@priority='breaking-blog' and (not(@archived) or @archived!='yes')])"/></xsl:when>
+        <xsl:when test="./@index='frontpage-only'"><xsl:value-of select="count(blog[@priority='frontpage' and (not(@archived) or @archived!='yes')])"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="count(blog[not(@archived) or @archived!='yes'])"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!-- get the path for each page link -->
+
+    <xsl:variable name="chapter_id" select="../@id"/>
+    <xsl:variable name="path">
+      <xsl:call-template name="create_xpath_to_node_blog">
+        <xsl:with-param name="node_id" select="$chapter_id"/>
+        <xsl:with-param name="web_root" select="//pages"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <!--<xsl:variable name="blog-base-link" select="concat('?',$path)"/>-->
+    <xsl:variable name="blog-base-link">
+      <xsl:choose>
+        <xsl:when test="./@enable-individual-page='no' or ./enable-individual-page=''">
+          <xsl:value-of select="''"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="concat('https://bddc.webpal.net/web?path=',substring-after($path, '/'))"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!-- determine if we are displaying just a regular list of items or with the images -->
+    <xsl:variable name="made">
+      <xsl:choose>
+        <xsl:when test="./@style='default'">
+          <xsl:text>page</xsl:text>
+        </xsl:when>
+        <xsl:when test="./@style='image'">
+          <xsl:text>image</xsl:text>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!-- end of variable definitions -->
+
+    <!-- get a new bloglist node with new attributes for easier styling -->
+    <xsl:variable name="new-bloglist-tree">
+      <xsl:apply-templates select="." mode="pre-process">
+        <xsl:with-param name="max-items" select="$max-items"/>
+        <xsl:with-param name="index" select="./@index"/>
+        <xsl:with-param name="blog-base-link" select="$blog-base-link"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="@archive='yes'">
+      </xsl:when>
+      <xsl:when test="$max-items=0">
+        <!-- no blog avail. or no items allowed -->
+        <xsl:processing-instruction name="php">
+          echo '&lt;div class="message"&gt;';
+          if (WebPal::language() === 'fr' ){
+          echo "Actuellement, il n'ya pas de nouvelles.";
+          } else {
+          echo "There is no item at the moment.";
+          }
+          echo "&lt;/div&gt;";
+        </xsl:processing-instruction>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- render page -->
+        <xsl:variable name="new-bloglist" select="exsl:node-set($new-bloglist-tree)/bloglist"/>
+        <!-- get attribute name for sorting -->
+        <xsl:variable name="sort-by">
+          <xsl:choose>
+            <xsl:when test="$new-bloglist/blog[1]/@*[name()!=@index-sort]"><xsl:value-of select="'date'"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="$new-bloglist/@index-sort"/></xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:element name="ul">
+          <xsl:element name="li">
+            <xsl:if test="$x_page">
+              <xsl:value-of select="$x_page"/>
+            </xsl:if>
+          </xsl:element>
+        </xsl:element>        
+
+        <xsl:element name="ul">
+          <xsl:attribute name="id">
+            <xsl:value-of select="$new-bloglist/@name"/>
+          </xsl:attribute>
+          <xsl:attribute name="style">
+            <xsl:text>visibility:hidden; list-style: none; padding-left: 0;</xsl:text>
+          </xsl:attribute>
+          <xsl:choose>
+            <xsl:when test="./@style='default'">
+              <xsl:choose>
+                <xsl:when test="$new-bloglist/@index='breaking-blog-first'">
+                  <!--
+when 'breaking-blog-first' selected,
+add sorting by priority number as an extra sort criteria
+-->
+                  <xsl:apply-templates select="$new-bloglist/blog" mode="page">
+                    <xsl:sort order="descending" select="@priority-number"/>
+                    <xsl:sort order="{@sort-order}" select="@*[name()=$sort-by]"/>
+                    <xsl:with-param name="max-items" select="$new-bloglist/@max-items"/>
+                    <xsl:with-param name="items-per-page" select="$new-bloglist/@items-per-page"/>
+                    <xsl:with-param name="number-of-pages" select="ceiling(count($new-bloglist/blog) div $new-bloglist/@items-per-page)"/>
+                    <xsl:with-param name="layout" select="$new-bloglist/@layout"/>
+                    <xsl:with-param name="date-format" select="$new-bloglist/@date-format"/>
+                  </xsl:apply-templates>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates select="$new-bloglist/blog" mode="page">
+                    <xsl:sort order="{@sort-order}" select="@*[name()=$sort-by]"/>
+                    <xsl:with-param name="max-items" select="$new-bloglist/@max-items"/>
+                    <xsl:with-param name="items-per-page" select="$new-bloglist/@items-per-page"/>
+                    <xsl:with-param name="number-of-pages" select="ceiling(count($new-bloglist/blog) div $new-bloglist/@items-per-page)"/>
+                    <xsl:with-param name="layout" select="$new-bloglist/@layout"/>
+                    <xsl:with-param name="date-format" select="$new-bloglist/@date-format"/>
+                  </xsl:apply-templates>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+            <xsl:when test="./@style='image'">
+              <xsl:choose>
+                <xsl:when test="$new-bloglist/@index='breaking-blog-first'">
+                  <!--
+when 'breaking-blog-first' selected,
+add sorting by priority number as an extra sort criteria
+-->
+                  <xsl:apply-templates select="$new-bloglist/blog" mode="image">
+                    <xsl:sort order="descending" select="@priority-number"/>
+                    <xsl:sort order="{@sort-order}" select="@*[name()=$sort-by]"/>
+                    <xsl:with-param name="max-items" select="$new-bloglist/@max-items"/>
+                    <xsl:with-param name="items-per-page" select="$new-bloglist/@items-per-page"/>
+                    <xsl:with-param name="number-of-pages" select="ceiling(count($new-bloglist/blog) div $new-bloglist/@items-per-page)"/>
+                    <xsl:with-param name="layout" select="$new-bloglist/@layout"/>
+                    <xsl:with-param name="date-format" select="$new-bloglist/@date-format"/>
+                  </xsl:apply-templates>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates select="$new-bloglist/blog" mode="image">
+                    <xsl:sort order="{@sort-order}" select="@*[name()=$sort-by]"/>
+                    <xsl:with-param name="max-items" select="$new-bloglist/@max-items"/>
+                    <xsl:with-param name="items-per-page" select="$new-bloglist/@items-per-page"/>
+                    <xsl:with-param name="number-of-pages" select="ceiling(count($new-bloglist/blog) div $new-bloglist/@items-per-page)"/>
+                    <xsl:with-param name="layout" select="$new-bloglist/@layout"/>
+                    <xsl:with-param name="date-format" select="$new-bloglist/@date-format"/>
+                  </xsl:apply-templates>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+          </xsl:choose>
+
+        </xsl:element>
+        <!--<div class="pagination compact-theme simple-pagination"></div>-->
+
+        <div class="row filterRow">
+          <div class="col-xs-12 pages">
+            <div class="blog_list_selector paging"></div>
+            <!-- <div class="col-sm-6 blog_list_details"></div> -->
+          </div>
+        </div> <!-- end of row -->
+
+        <xsl:variable name="containerID" select="concat('&quot;',$new-bloglist/@name,'&quot;')"/>
+
+        <script type="text/javascript">
+          $(window).load(function() {
+          var bloglist = "#" + <xsl:value-of select="$containerID"/>;
+          var $containerID = <xsl:value-of select="$containerID"/>;
+          var lang = '<xsl:processing-instruction name="php">echo WebPal::language();</xsl:processing-instruction>';
+
+          $(bloglist).css('visibility','visible');
+          /*$("div.pagination").jPages({
+          containerID  : $containerID,
+          perPage      : $perPage,
+          startPage    : 1,
+          startRange   : 1,
+          midRange     : 5,
+          endRange     : 1
+          });*/
+
+          var $pageSelector = $("div.blog_list_selector");
+
+          // jPages init
+          $pageSelector.jPages(
+          {
+          containerID  : $containerID,
+          perPage      : <xsl:value-of select='$new-bloglist/@items-per-page'/>,
+          startPage    : 1,
+          startRange   : 1,
+          midRange     : 5,
+          endRange     : 1,
+          callback     :
+          function(pages, items)
+          {
+          var range = items.range;
+
+          if (lang == 'fr') {
+          $pageSelector.siblings("div.blog_list_details").empty()
+          .html("Résultats " + Number(range.start) + " à " + Number(range.end) + " (sur " + Number(items.count) + ")");
+          } else {
+          $pageSelector.siblings("div.blog_list_details").empty()
+          .html("Showing " + Number(range.start) + " - " + Number(range.end) + " of " + Number(items.count));
+          }
+
+          $(bloglist + ' li').css('border-bottom', '1px solid #C3C8C8');
+          $(bloglist + ' li').last().css('border-bottom', 'none');
+
+          var i = 0;
+
+          $(bloglist + ' li').each(
+          function()
+          {
+          if (++i % <xsl:value-of select='$new-bloglist/@items-per-page'/> == 0)
+          {
+          $(this).last().css('border-bottom', 'none');
+          }
+          }
+          );
+          }
+          }
+          );
+
+          var $perPage = $(".blog_perPage_filter");
+          var $perPageBtn = $perPage.find(".filter a");
+
+          $perPageBtn.click(
+          function()
+          {
+          var pageLimit = $(this).attr('data-value');
+
+          if (pageLimit)
+          {
+          $pageSelector.jPages("destroy").jPages(
+          {
+          containerID  : $containerID,
+          perPage      : pageLimit,
+          startPage    : 1,
+          startRange   : 1,
+          midRange     : 5,
+          endRange     : 1,
+          callback	   :
+          function(pages, items)
+          {
+          var range = items.range;
+
+          if (lang == 'fr') {
+          $pageSelector.siblings("div.blog_list_details").empty()
+          .html("Résultats " + Number(range.start) + " à " + Number(range.end) + " (sur " + Number(items.count) + ")");
+          } else {
+          $pageSelector.siblings("div.blog_list_details").empty()
+          .html("Showing " + Number(range.start) + " - " + Number(range.end) + " of " + Number(items.count));
+          }
+
+          $(bloglist + ' li').css('border-bottom', '1px solid #C3C8C8');
+          $(bloglist + ' li').last().css('border-bottom', 'none');
+
+          var i = 0;
+
+          $(bloglist + ' li').each(
+          function()
+          {
+          if (++i % pageLimit == 0)
+          {
+          $(this).last().css('border-bottom', 'none');
+          }
+          }
+          );
+          }
+          }
+          );
+          }
+          }
+          );
+          });
+
+        </script>
+
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template>
+
+  <!-- ========================================================================================= -->
+  <!-- ================================= bloglist page templates =============================== -->
+  <!-- ========================================================================================= -->
+
+  <xsl:template match="blog" mode="page">
+    <xsl:param name="max-items"/>
+    <xsl:param name="items-per-page"/>
+    <xsl:param name="number-of-pages"/>
+    <xsl:param name="layout"/>
+    <xsl:param name="date-format"/>
+
+    <xsl:if test="position() &lt;= $max-items">
+
+      <li>
+        <div class="meta meta-date">
+          <!-- date here -->
+          <xsl:if test="contains($layout,'date')">
+            <xsl:variable name="formatted-date">
+              <xsl:call-template name="format-date-blog">
+                <xsl:with-param name="format" select="$date-format"/>
+                <xsl:with-param name="date" select="./@date"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:choose>
+              <xsl:when test="$date-format='custom_M_d'">
+                <xsl:copy-of select="$formatted-date"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$formatted-date"/>
+              </xsl:otherwise>
+            </xsl:choose>
+
+          </xsl:if>
+        </div>
+        <!-- title here -->
+        <h2 class="meta-title">
+          <xsl:if test="./@link">
+            <xsl:text disable-output-escaping="yes">&lt;a href="</xsl:text>
+            <xsl:value-of select="./@link"/>
+            <xsl:text disable-output-escaping="yes">" rel="bookmark" title="</xsl:text>
+            <xsl:value-of select="title"/>
+            <xsl:text disable-output-escaping="yes">"&gt;</xsl:text>
+          </xsl:if>
+          <xsl:value-of select="title"/>
+          <xsl:if test="./@link">
+            <xsl:text disable-output-escaping="yes">&lt;/a&gt;</xsl:text>
+          </xsl:if>
+        </h2>
+
+        <div class="meta meta-author">
+          <!-- author here -->
+          <xsl:if test="author">
+            <xsl:value-of select="author"/>
+          </xsl:if>
+        </div>
+
+        <!-- description here -->
+        <xsl:if test="contains($layout,'synopsis')">
+          <div class="hidden-xs entry-synopsis"><xsl:value-of select="synopsis"/><xsl:text disable-output-escaping="yes"> </xsl:text>
+            <xsl:if test="./@link">
+              <xsl:text disable-output-escaping="yes">&lt;a href="</xsl:text>
+              <xsl:value-of select="./@link"/>
+              <xsl:text disable-output-escaping="yes">" rel="bookmark" class="blogReadMore"&gt;</xsl:text>
+              <xsl:processing-instruction name="php">
+                if (WebPal::language() === 'fr' ){
+                echo "En savoir plus ";
+                } else {
+                echo "Read more ";
+                }
+              </xsl:processing-instruction>
+              <xsl:text disable-output-escaping="yes">&lt;i class="fa fa-angle-double-right"&gt;&lt;/i&gt; &lt;/a&gt;</xsl:text>
+            </xsl:if>
+          </div>
+        </xsl:if>
+
+
+        <!-- content here -->
+        <xsl:if test="contains($layout,'text')">
+          <div class="entry">
+            <xsl:apply-templates select="text" />
+            <!--<img alt="" data-file-id="imgD9miHeVA7Y5n.jpg" data-original="?f=imgD9miHeVA7Y5n.jpg&amp;_dm_id=imgD9miHeVA7Y5n.jpg" style=";" class="img-responsive lazy" />-->
+          </div>
+        </xsl:if>
+      </li>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="blog" mode="image">
+    <xsl:param name="max-items"/>
+    <xsl:param name="items-per-page"/>
+    <xsl:param name="number-of-pages"/>
+    <xsl:param name="layout"/>
+    <xsl:param name="date-format"/>
+
+    <xsl:variable name="article_text" select="."/>
+    <xsl:if test="position() &lt;= $max-items">
+
+      <xsl:element name="li">
+        <xsl:attribute name="class">
+          <xsl:text>list-item</xsl:text>
+        </xsl:attribute>
+
+        <!-- element format of the blog post
+details
+|-summary
+|-a - h2 - title
+|-div.meta
+|-date
+|-author
+|-categories
+|-tags
+|-div.image
+|-image
+|-div.content
+|-content
+-->
+        <xsl:element name="details">
+          <!-- summary shows while the post is collapsed -->
+          <xsl:element name="summary">
+            <!-- title (mandatory) -->
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>meta-title</xsl:text>
+              </xsl:attribute>
+              <xsl:choose>
+                <xsl:when test="./@link">
+                  <xsl:element name="a">
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="./@link"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="rel">
+                      <xsl:text>bookmark</xsl:text>
+                    </xsl:attribute>
+                    <xsl:attribute name="title">
+                      <xsl:value-of select="./title"/>
+                    </xsl:attribute>
+                    <h2>
+                      <xsl:value-of select="./title"/>
+                    </h2>
+                  </xsl:element>
+                </xsl:when>
+                <xsl:otherwise>
+                  <h2>
+                    <xsl:value-of select="./title"/>
+                  </h2>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:element>
+            <!-- meta -->
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>meta</xsl:text>
+              </xsl:attribute>
+
+              <!-- date -->
+              <xsl:element name="div">
+                <xsl:attribute name="class">
+                  <xsl:text>meta-date</xsl:text>
+                </xsl:attribute>
+                <xsl:if test="contains($layout,'date')">
+                  <xsl:variable name="formatted-date">
+                    <xsl:call-template name="format-date-blog">
+                      <xsl:with-param name="format" select="$date-format"/>
+                      <xsl:with-param name="date" select="./@date"/>
+                    </xsl:call-template>
+                  </xsl:variable>
+                  <xsl:choose>
+                    <xsl:when test="$date-format='custom_M_d'">
+                      <!-- The custom date returns rendered html, so we want a copy rather than just the value -->
+                      <xsl:copy-of select="$formatted-date"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="$formatted-date"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:if>
+              </xsl:element>
+              <!-- author -->
+              <xsl:element name="div">
+                <xsl:attribute name="class">
+                  <xsl:text>meta-author</xsl:text>
+                </xsl:attribute>
+              </xsl:element>
+              <!-- categories -->
+              <xsl:if test="count(./categories/*) &gt; 0">
+                <xsl:element name="ul">
+                  <xsl:for-each select="./categories/*">
+                    <xsl:element name="li">
+                      <xsl:attribute name="class">
+                        <xsl:text>category</xsl:text>
+                      </xsl:attribute>
+                      <xsl:value-of select="."/>
+                    </xsl:element>
+                  </xsl:for-each>
+                </xsl:element>
+              </xsl:if>
+              <!-- tags -->
+              <xsl:if test="count(./tags/*) &gt; 0">
+                <xsl:element name="ul">
+                  <xsl:for-each select="./tags/*">
+                    <xsl:element name="li">
+                      <xsl:attribute name="class">
+                        <xsl:text>tag</xsl:text>
+                      </xsl:attribute>
+                      <xsl:value-of select="."/>
+                    </xsl:element>
+                  </xsl:for-each>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+            <!-- image -->
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>item-image</xsl:text>
+              </xsl:attribute>
+              <!--           <xsl:element name="img">
+<xsl:attribute name="src">
+<xsl:text>?ft=</xsl:text>
+<xsl:value-of select="./image/@src"/>
+</xsl:attribute>
+<xsl:attribute name="class">
+<xsl:text>thumbnail</xsl:text>
+</xsl:attribute>
+<xsl:attribute name="style">
+<xsl:text>width: 100px; height: 100px;</xsl:text>
+</xsl:attribute>
+</xsl:element> -->
+            </xsl:element>
+            <!-- summary content -->
+            <xsl:element name="p">
+              <xsl:attribute name="class">summary</xsl:attribute>
+              <xsl:value-of select="concat(substring($article_text, 0, 100), '...')"/>
+            </xsl:element>
+            <!-- read more link -->
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>read-more</xsl:text>
+              </xsl:attribute>
+              <xsl:element name="a">
+                <xsl:text>Read More</xsl:text>
+              </xsl:element>
+            </xsl:element>
+          </xsl:element>
+          <!-- content shows while the post is expanded -->
+          <xsl:element name="content">
+            <xsl:element name="div">
+              <xsl:attribute name="class">content</xsl:attribute>
+              <xsl:apply-templates select="text"/>
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
+      </xsl:element>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="blog[@upcoming='yes']" mode="upcoming">
+    <xsl:param name="max-items"/>
+    <xsl:param name="items-per-page"/>
+    <xsl:param name="number-of-pages"/>
+    <xsl:param name="layout"/>
+    <xsl:param name="date-format"/>
+    <xsl:param name="blog-base-link"/>
+    <xsl:variable name="blog-text">
+      <xsl:variable name="text">
+        <xsl:apply-templates select="./text"/>
+      </xsl:variable>
+      <xsl:for-each select="exsl:node-set($text)/*">
+        <xsl:value-of select="."/>
+        <xsl:if test="string-length(.)=0">
+          <xsl:text>. </xsl:text>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="blog-summary">
+      <xsl:value-of select="concat(substring($blog-text, 0, 100), '...')"/>
+    </xsl:variable>
+    <xsl:if test="position() &lt;= $max-items">
+
+      <li>
+        <div class="meta meta-date">
+          <!-- date here -->
+          <xsl:if test="contains($layout,'date')">
+            <xsl:variable name="formatted-date">
+              <xsl:call-template name="format-date-blog">
+                <xsl:with-param name="format" select="$date-format"/>
+                <xsl:with-param name="date" select="./@date"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:choose>
+              <xsl:when test="$date-format='custom_M_d'">
+                <xsl:copy-of select="$formatted-date"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$formatted-date"/>
+              </xsl:otherwise>
+            </xsl:choose>
+
+          </xsl:if>
+        </div>
+        <!-- title here -->
+        <h2 class="meta-title">
+          <!--           <xsl:if test="./@link"> -->
+          <xsl:if test="$blog-base-link and @name">
+            <xsl:text disable-output-escaping="yes">&lt;a href="</xsl:text>
+            <xsl:value-of select="$blog-base-link"/>&amp;node=<xsl:value-of select="./@name"/>
+            <xsl:text disable-output-escaping="yes">" rel="bookmark" title="</xsl:text>
+            <xsl:value-of select="title"/>
+            <xsl:text disable-output-escaping="yes">"&gt;</xsl:text>
+          </xsl:if>
+          <xsl:value-of select="title"/>
+          <xsl:if test="$blog-base-link and @name">
+            <!--             <xsl:if test="./@link"> -->
+            <xsl:text disable-output-escaping="yes">&lt;/a&gt;</xsl:text>
+          </xsl:if>
+        </h2>
+
+        <!-- content -->
+        <div>
+          <xsl:value-of select="$blog-summary" />
+        </div>
+      </li>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- ========================================================================================= -->
+  <!-- ============================ Individual blog page template ============================== -->
+  <!-- ========================================================================================= -->
+
+  <xsl:template match="bloglist/blog">
+
+    <xsl:variable name="blog-tree">
+      <xsl:apply-templates select="." mode="pre-process">
+        <xsl:with-param name="index" select="../@index"/>
+        <xsl:with-param name="blog-base-link" select="''"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+
+    <xsl:variable name="blog" select="exsl:node-set($blog-tree)/blog"/>
+    <div class="content">
+      <h1>
+        <xsl:value-of select="$blog/title"/>
+      </h1>
+      <div class="meta" style="padding-bottom: 10px;">
+        <!-- date here -->
+        <xsl:if test="contains(../@layout,'date')">
+          <xsl:variable name="formatted-date">
+            <xsl:call-template name="format-date-blog">
+              <xsl:with-param name="format" select="../@date-format"/>
+              <xsl:with-param name="date" select="$blog/@date"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <i class="fa fa-calendar" style="padding-right: 5px;"></i><xsl:value-of select="$formatted-date"/>
+        </xsl:if>
+        <!-- author here -->
+        <xsl:if test="$blog/author">
+          <i class="fa fa-user"></i><xsl:value-of select="$blog/author"/>
+        </xsl:if>
+      </div>
+      <!-- content here -->
+      <div class="entry">
+        <xsl:apply-templates select="$blog/text" />
+      </div>
+    </div>
+  </xsl:template>
+
+  <!-- ========================================================================================= -->
+  <!-- ================================= pre-process templates ================================= -->
+  <!-- ========================================================================================= -->
+
+  <!-- pre-process bloglist -->
+  <xsl:template match="bloglist" mode="pre-process">
+    <xsl:param name="max-items"/>
+    <xsl:param name="index"/>
+    <xsl:param name="blog-base-link"/>
+    <xsl:param name="get-archived"/>
+
+    <!-- We need to get a sorted list of the articles before we grab the subset,
+or else only the first n items will be sorted -->
+    <xsl:variable name="sorted-articles">
+      <xsl:for-each select="./blog">
+        <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
+        <xsl:choose>
+          <xsl:when test="./@archived and ./@archived = 'yes'">
+            <!-- do nothing -->
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="."/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:variable>
+    <!-- this subset represents the first page's items only -->
+    <xsl:variable name="subset">
+      <xsl:for-each select="exsl:node-set($sorted-articles)/blog[position() &lt;= $max-items]">
+        <xsl:apply-templates select="." mode="pre-process">
+          <xsl:with-param name="index" select="$index"/>
+          <xsl:with-param name="blog-base-link" select="$blog-base-link"/>
+          <xsl:with-param name="get-archived" select="$get-archived"/>
+        </xsl:apply-templates>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:for-each select="exsl:node-set($subset)/blog">
+      <xsl:copy-of select="."/>
+    </xsl:for-each>
+
+    <!-- 	<xsl:copy>
+<xsl:attribute name="max-items">
+<xsl:value-of select="$max-items"/>
+</xsl:attribute>
+<xsl:apply-templates select="@*|node()" mode="pre-process">
+<xsl:with-param name="index" select="$index"/>
+<xsl:with-param name="blog-base-link" select="$blog-base-link"/>
+<xsl:with-param name="get-archived" select="$get-archived"/>
+</xsl:apply-templates>
+</xsl:copy> -->
+  </xsl:template>
+
+  <!-- pre-process blog -->
+  <xsl:template match="blog" mode="pre-process">
+    <xsl:param name="index"/>
+    <xsl:param name="blog-base-link"/>
+    <xsl:param name="get-archived" />
+
+    <!--
+<xsl:variable name="pla-time" select="php:function('strtotime',string(./@post-live-at))"/>
+<xsl:variable name="ea-time" select="php:function('strtotime',string(./@expire-after))"/>
+-->
+    <xsl:variable name="current-day" select="php:function('strtotime','today')"/>
+    <xsl:variable name="pla-time">
+      <xsl:choose>
+        <xsl:when test="./@post-live-at='' or not(./@post-live-at)">
+          <xsl:value-of select="php:function('strtotime','1990-01-01')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="php:function('strtotime',string(./@post-live-at))"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="ea-time">
+      <xsl:choose>
+        <xsl:when test="./@expire-after='' or not(./@expire-after)">
+          <xsl:value-of select="php:function('strtotime','2099-12-31')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="php:function('strtotime',string(./@expire-after))"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!-- <xsl:variable name="date-validate" select="$pla-time &lt;= $current-day and $current-day &lt;= $ea-time"/>-->
+
+    <!-- copy breaking blog or frontpage only if one of these two options is flagged -->
+    <!-- copy non-expired blog only -->
+    <xsl:if test="(
+                  $index!='breaking-blog-only' 
+                  or ($index='breaking-blog-only' and @priority='breaking-blog')
+                  or ($index='frontpage-only' and @priority='frontpage')
+                  )
+                  and
+                  (
+                  ($get-archived and $ea-time &lt; $current-day)
+                  or (not($get-archived) and ($pla-time &lt;= $current-day and $current-day &lt;= $ea-time))
+                  )">
+      <xsl:copy>
+        <xsl:attribute name="priority-number">
+          <xsl:choose>
+            <xsl:when test="@priority='breaking-blog'">
+              <xsl:value-of select="3"/>
+            </xsl:when>
+            <xsl:when test="@priority='frontpage'">
+              <xsl:value-of select="2"/>
+            </xsl:when>
+            <xsl:when test="@priority='regular'">
+              <xsl:value-of select="1"/>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:attribute>
+
+        <xsl:if test="$blog-base-link and $blog-base-link != '' and @name and @name != ''">
+          <xsl:attribute name="link">
+            <xsl:value-of select="concat($blog-base-link,'&amp;node=',@name)"/>
+          </xsl:attribute>
+        </xsl:if>
+
+        <xsl:apply-templates select="@*|node()" mode="pre-process"/>
+      </xsl:copy>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- pre-process all other nodes (copy forward) -->
+  <xsl:template match="@*|node()" mode="pre-process">
+    <xsl:choose>
+      <!-- parse whitespace properly -->
+      <xsl:when test="local-name()='ch' and ./@value='nbsp'">
+        <xsl:text disable-output-escaping="yes"> </xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()" mode="pre-process"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- ========================================================================================= -->
+  <!-- ======================================== functions ====================================== -->
+  <!-- ========================================================================================= -->
+
+  <xsl:template name="format-date-blog">
+    <xsl:param name="format"/>
+    <xsl:param name="date"/>
+
+    <xsl:variable name="php-format-string">
+      <xsl:choose>
+        <xsl:when test="$format='yyyy-mm-dd'">
+          <xsl:value-of select="'Y-m-d'"/>
+        </xsl:when>
+        <xsl:when test="$format='dd-mm-yyyy'">
+          <xsl:value-of select="'d-m-Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='yyyy/mm/dd'">
+          <xsl:value-of select="'Y/m/d'"/>
+        </xsl:when>
+        <xsl:when test="$format='mm/dd/yyyy'">
+          <xsl:value-of select="'m/d/Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='dd/mm/yyyy'">
+          <xsl:value-of select="'d/m/Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='dd-Mon-yy'">
+          <xsl:value-of select="'d-M-y'"/>
+        </xsl:when>
+        <xsl:when test="$format='Weekday_Month_dd_yyyy'">
+          <xsl:value-of select="'l F d Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='Weekday_dd_Month_yyyy'">
+          <xsl:value-of select="'l d F Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='Wkd_Mon_dd_yyyy'">
+          <xsl:value-of select="'D M d Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='Wkd_Mon_dd_yy'">
+          <xsl:value-of select="'D M d y'"/>
+        </xsl:when>
+        <xsl:when test="$format='Month_dd_yyyy'">
+          <xsl:value-of select="'F d Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='Mon_dd_yyyy'">
+          <xsl:value-of select="'M d Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='MMM'">
+          <xsl:value-of select="'M'"/>
+        </xsl:when>
+        <xsl:when test="$format='D'">
+          <xsl:value-of select="'d'"/>
+        </xsl:when>
+        <xsl:when test="$format='YYYY'">
+          <xsl:value-of select="'Y'"/>
+        </xsl:when>
+        <xsl:when test="$format='custom_M_d'">
+          <xsl:element name="div">
+            <xsl:attribute name="class">
+              <xsl:text>month</xsl:text>
+            </xsl:attribute>
+            <xsl:variable name="date-string" select="php:function('strtotime',string($date))"/>
+            <xsl:value-of select="php:function('date','M',number($date-string))"/>
+          </xsl:element>
+          <xsl:element name="div">
+            <xsl:attribute name="class">
+              <xsl:text>day</xsl:text>
+            </xsl:attribute>
+            <xsl:variable name="date-string" select="php:function('strtotime',string($date))"/>
+            <xsl:value-of select="php:function('date','d',number($date-string))"/>
+          </xsl:element>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:choose>
+      <!-- our custom format outputs html, so we'll display a copy of the variable in that instance -->
+      <xsl:when test="$format = 'custom_M_d'">
+        <xsl:copy-of select="$php-format-string"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="date-string" select="php:function('strtotime',string($date))"/>
+        <xsl:value-of select="php:function('date',$php-format-string,number($date-string))"/>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template>
+  <!--   
+<xsl:template name="create_xpath_to_node">
+<xsl:param name="node_id"/>
+<xsl:param name="web_root"/>
+<xsl:variable name="node" select="$web_root//page[@id=$node_id]"/>
+<xsl:variable name="ancestors" select="$node/ancestor::page"/>
+<xsl:value-of select="string('/')"/>
+<xsl:for-each select="$ancestors">
+<xsl:value-of select="@name"/>
+<xsl:value-of select="string('/')"/>
+</xsl:for-each>
+<xsl:value-of select="$node/@name"/>
+</xsl:template> -->
+
+  <xsl:template name="create_xpath_to_node_blog">
+    <xsl:param name="node_id"/>
+    <xsl:param name="web_root"/>
+    <xsl:variable name="node" select="$web_root//page[@id=$node_id]"/>
+    <xsl:variable name="ancestors" select="$node/ancestor::page"/>
+    <xsl:value-of select="string('/')"/>
+    <xsl:for-each select="$ancestors">
+      <xsl:value-of select="@name"/>
+      <xsl:value-of select="string('/')"/>
+    </xsl:for-each>
+    <xsl:value-of select="$node/@name"/>
+  </xsl:template>
+</xsl:stylesheet>]]></stylesheet>

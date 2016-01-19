@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<extension id="exteCxJkyOGE6w_c" name="bloglist" webpalschematype="wpExtension">
+  <source id="sourUHG5os62CWZC" __stub="yes"/>
+  <resources id="resoy2BVjMUtYmvD" __stub="yes"/>
+  <routes id="routC_ZJq46VuUaK" __stub="yes"/>
+  <controllers id="contfULSvksy5FiL" __stub="yes"/>
+  <stylesheet id="styl0Mcditg36kRI" __stub="yes"/>
+  <node-schema id="node__olvhOq9358" __stub="yes"/>
+</extension>

@@ -1,0 +1,138 @@
+.blog-image {
+      margin: 0;
+      }
+
+      article {
+      padding-bottom: 30px;
+      }
+      .meta-category ul {
+      margin: 0;
+      display: inline-block;
+      }
+      .header h2 a {
+      font-size: 18px;
+      text-decoration: none;
+      }
+
+      .blog-image .blog-date-info {
+      position: absolute;
+      }
+
+      .blog-image .blog-date-info {
+      z-index: 1;
+      background: rgba(0,0,0,0.5);
+      width: 75px;
+      height: 75px;
+      }
+
+      .blog-date-info .blog-month,
+      .blog-date-info .blog-day,
+      .blog-date-info .blog-year {
+      width: 50%;
+      margin: 0 auto;
+      color: white;
+      display: block;
+      text-align: center;
+      font-size: 1em;
+      }
+
+      .blog-date-info .blog-month {
+      text-transform: uppercase;
+      }
+
+      .blog-date-info .blog-day {
+      font-size: 1.8em;
+      }
+
+      .category, .main-category {
+      display: inline-block;
+      padding-right: 5px;
+      }
+      .main-category {
+      font-weight: bold;
+      }
+      .tag {
+      display: inline-block;
+      padding-right: 5px;
+      }
+
+      /* this is a hack. There is a problem where the xsl is outputting empty categories.
+      I was unable to find where the exact issue was, but settled for hiding it with CSS
+      to save development time */
+      li a[href="#category="] {
+      position: absolute;
+      left: -10000px;
+      top: -10000px;
+      }
+
+
+      .blog-filters ul {
+      padding: 0;
+      margin-top: 0;
+      list-style: none;
+      margin-left: 0;
+      }
+      .blog-filters ul ul > li a {
+      padding-left: 20px;
+      }
+      .blog-by-year li, .blog-by-category li, .blog-by-tag li {
+      margin: 0px;
+      }
+      .blog-filters ul.blog-by-year a, .blog-filters ul.blog-by-category a{
+      display: block;
+      border-bottom: 1px solid #eaeaea;
+      color: inherit;
+      font-size: 13px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      line-height: 21px;
+      text-decoration: none;
+      display: block;
+      width: auto;
+      }
+      .blog-filters ul.blog-by-year a:hover, .blog-filters ul.blog-by-category a:hover{
+      color: #76ae2b;
+      }
+      .blog-filters .title {
+      color: #76ae2b;
+      font-size: 18px;
+      text-transform: uppercase;
+      margin-top: 40px;
+      }
+      .blog-filters:first-of-type .title {
+      margin-top: 0px;
+      }
+      .blog-filters .count {
+      margin-left: 5px;
+      font-style: italic;
+      }
+
+      .blog-by-tag li {
+      border-radius: 2px;
+      margin-bottom: 4px;
+      padding: 4px 5px 2px 5px;
+      font-size: 14px;
+      background-color: #76ae2b;
+      color: #fff;
+      border: 1px solid transparent;
+      display: inline-block;
+      margin-right: 4px;
+      }
+      .blog-by-tag li a {
+      color: #fff;
+      text-decoration: none;
+      }
+      .blog-by-tag li:hover {
+      background-color: #fff;
+      border: 1px solid #76ae2b;
+      }
+      .blog-by-tag li:hover a {
+      color: #76ae2b;
+      }
+      .meta-tags i {
+      margin-right: 5px;
+      }
+
+      .blog-by-year li:hover, .blog-by-category li:hover, .blog-by-tag li:hover {
+      cursor: pointer;
+      }

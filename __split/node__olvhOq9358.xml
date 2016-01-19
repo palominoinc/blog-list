@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<node-schema id="node__olvhOq9358" lang="any" show-in="main" webpalschematype="wpPageRaw"><![CDATA[<schema xmlns="http://www.palominosys.com/wpschema">
+
+
+  <complexType extends="wpPage" name="wpPage-wpBlogList_v1">
+    <element name="bloglist" type="wpBlogList_v1" folder="list"/>
+  </complexType>
+
+  
+  <!--  ================= wpBlogList ================ -->
+  <!--  == a list of new items                     == -->
+  <!--  ============================================= -->
+
+  <complexType name="wpBlogList_v1" edittype="table" icon="table.png" lockable="yes">
+
+    <attribute name="id" use="auto" type="wpString" value="bloglst"/>
+    <attribute name="name" use="default" type="wpString" value="bloglist"/>
+
+    <attribute name="show-in" use="oneof" type="wpString" value="main,related1,related2,related3,related4,related5"/>
+
+    <attribute name="index" use="oneof" type="wpString" value="list-all,list-none,frontpage-only,breaking-news-only,breaking-news-first,10-most-recent,5-most-recent"/>
+    <attribute name="index-sort" use="oneof" type="wpString" value="unsorted,date"/>
+    <attribute name="sort-order" use="oneof" type="wpString" value="ascending,descending"/>
+    <attribute name="items-per-page" use="oneof" type="wpString" value="5,10,20,30"/>
+    <attribute name="enable-individual-page" use="oneof" type="wpString" value="yes,no"/>
+    <attribute name="layout" use="oneof" type="wpString" value="title-date-text,title-date-synopsis,title-synopsis,title-date,title-only"/>
+    <attribute name="date-format" use="oneof" type="wpString" value="yyyy-mm-dd,dd-mm-yyyy,yyyy/mm/dd,mm/dd/yyyy,dd/mm/yyyy,dd-Mon-yy,Weekday_Month_dd_yy,Weekday_dd_Month_yyyy,Wkd_Mon_dd_yyyy,Wkd_Mon_dd_yy,Month_dd_yyyy,Mon_dd_yyyy,custom_M_d"/>
+    <attribute name="enable-rss" use="oneof" type="wpString" value="yes,no"/>
+    <attribute name="style" use="oneof" type="wpString" value="default,image"/>
+
+    <element name="blog" type="wpBlog_v1" minOccurs="1" />
+  </complexType>
+
+  <!--  ================== wpNews ================ -->
+  <!--  ===  a new item                         == -->
+  <!--  ========================================== -->
+
+  <complexType name="wpBlog_v1" edittype="sheet" icon="blogpaper.png" lockable="yes">
+
+    <attribute name="id" use="auto" type="wpString" value="blog"/>
+    <attribute name="name" use="required" type="wpString" value="blog"/>
+    <attribute name="archived" use="oneof" type="wpString" value="no,yes" />
+    <attribute name="upcoming" use="oneof" type="wpString" value="no,yes" />
+    <attribute name="date" type="wpDate"/>
+    <element name="title" type="wpStringL" />
+    <element name="text" type="wpHtml" minOccurs="1"/>
+    <element name="tags" type="wpBlogTags" maxOccurs="1"/>
+    <element name="categories" type="wpBlogCategories" maxOccurs="1"/>
+    <element name="image" type="wpImage_v1" maxOccurs="1"/>
+  </complexType>
+
+  <complexType name="wpBlogTags" edittype="sheet" icon="table.png">
+    <element name="tag" type="wpStringL"/>
+  </complexType>
+
+  <complexType name="wpBlogCategories" edittype="sheet" icon="table.png">
+    <element name="main-category" type="wpStringL" maxOccurs="1"/>
+    <element name="category" type="wpStringL"/>
+  </complexType>
+</schema>]]></node-schema>
