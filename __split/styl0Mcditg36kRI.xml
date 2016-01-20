@@ -44,6 +44,7 @@ Illegal reproduction and disclosure will be prosecuted  -->
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
+  
   <xsl:template match="bloglist">
 
     <xsl:variable name="max-items">
@@ -86,14 +87,8 @@ or else only the first n items will be sorted -->
     <!-- and determine how many pages we will need for them -->
     <xsl:variable name="num-pages">
       <xsl:value-of select="ceiling($num-items div $items-per-page)"/>
-    </xsl:variable>
-    
-<!--     recent articles subset -->
-    <xsl:variable name="subset-recent">
-        <xsl:for-each select="exsl:node-set($sorted-articles)/blog[position() &lt;= 5]">
-            <xsl:copy-of select="."/>
-        </xsl:for-each>
-    </xsl:variable>
+    </xsl:variable> 
+
     
     <!-- START output the bloglist -->
 
@@ -155,60 +150,19 @@ and display the full pagination-->
         </xsl:element>
       </div>
       
-      <div class="col-md-3 blog-sidebar">
+<!--=================sidebar==================-->
+      <div class="col-md-3 blog-sidebar" style="padding-top: 15px;">
         
-        <section class="widget search">
-          <h3 class="sr-only title">Search Blog</h3>
-          <form class="search-blog-form">
-              <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Search blog..."/>
-              </div>
-              <button type="submit" class="btn btn-cta btn-cta-secondary">
-                <i class="fa fa-search"></i>
-              </button>
-          </form>
-        </section>
-        <!--//search-->
+        <xsl:call-template name="blog-sidebar">
+
+        </xsl:call-template>
         
-        <section class="widget recent-posts blog-filters">
-          <h3 class="title">Recent Posts</h3>
-          <ul class="list-unstyled">
-            
-          <xsl:call-template name="recent-posts" mode="meta">
-              <xsl:with-param name="recent" select="($subset-recent)"/>
-          </xsl:call-template>
-             
-            
-          </ul>
-        </section>
-        
-        <div class="blog-filters">
-          <div class="title">Categories</div>
-          <xsl:call-template name="output-category-list-from-blog-node" mode="meta">
-            <xsl:with-param name="bloglist" select="."/>
-          </xsl:call-template>
-        </div>
-        <div class="blog-filters">
-          <div class="title">Years</div>
-          <xsl:call-template name="output-year-list-from-blog-node" mode="meta">
-            <xsl:with-param name="bloglist" select="."/>
-          </xsl:call-template>
-        </div>
-        <div class="blog-filters">
-          <div class="title">Tags</div>
-          <xsl:call-template name="output-tag-list-from-blog-node" mode="meta">
-            <xsl:with-param name="bloglist" select="."/>
-          </xsl:call-template>
-        </div>
       </div>
+<!-- =============== /sidebar =================     -->
       
-<!--       <xsl:call-templates name="blog-sidebar">
-          <xsl:with-param name="bloglist" select="."/>
-          <xsl:with-param name="bloglist_list" select="$bloglist"/>
-          <xsl:with-param  name="subset-recent" select="$subset-recent"/>
-      </xsl:call-templates> -->
       
     </div>
+<!--  /row    -->
 
     <!-- END output the bloglist -->
     <!--     <script src="/resources/Bloglist/js/bloglist.js"></script> -->
@@ -1670,13 +1624,17 @@ add sorting by priority number as an extra sort criteria
 
         <!-- content here -->
         <xsl:if test="contains($layout,'text')">
-          <div class="entry">
-            <xsl:apply-templates select="text" />
-            <!--<img alt="" data-file-id="imgD9miHeVA7Y5n.jpg" data-original="?f=imgD9miHeVA7Y5n.jpg&amp;_dm_id=imgD9miHeVA7Y5n.jpg" style=";" class="img-responsive lazy" />-->
+          <div class="entry">      
+              <xsl:apply-templates select="text" />
+            <!--<img alt="" data-file-id="imgD9miHeVA7Y5n.jpg" data-original="?f=imgD9miHeVA7Y5n.jpg&amp;_dm_id=imgD9miHeVA7Y5n.jpg" style=";" class="img-responsive lazy" />-->         
           </div>
+          
         </xsl:if>
+        <!--   /content        -->
       </li>
     </xsl:if>
+    
+    
   </xsl:template>
 
   <xsl:template match="blog" mode="image">
@@ -1930,31 +1888,44 @@ details
     </xsl:variable>
 
     <xsl:variable name="blog" select="exsl:node-set($blog-tree)/blog"/>
-    <div class="content">
-      <h1>
-        <xsl:value-of select="$blog/title"/>
-      </h1>
-      <div class="meta" style="padding-bottom: 10px;">
-        <!-- date here -->
-        <xsl:if test="contains(../@layout,'date')">
-          <xsl:variable name="formatted-date">
-            <xsl:call-template name="format-date-blog">
-              <xsl:with-param name="format" select="../@date-format"/>
-              <xsl:with-param name="date" select="$blog/@date"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <i class="fa fa-calendar" style="padding-right: 5px;"></i><xsl:value-of select="$formatted-date"/>
-        </xsl:if>
-        <!-- author here -->
-        <xsl:if test="$blog/author">
-          <i class="fa fa-user"></i><xsl:value-of select="$blog/author"/>
-        </xsl:if>
+    
+    <div class="row">
+      <!-- =======content======= -->
+      <div class="col-md-9 content">
+        <h1>
+          <xsl:value-of select="$blog/title"/>
+        </h1>
+        <div class="meta" style="padding-bottom: 10px;">
+          <!-- date here -->
+          <xsl:if test="contains(../@layout,'date')">
+            <xsl:variable name="formatted-date">
+              <xsl:call-template name="format-date-blog">
+                <xsl:with-param name="format" select="../@date-format"/>
+                <xsl:with-param name="date" select="$blog/@date"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <i class="fa fa-calendar" style="padding-right: 5px;"></i><xsl:value-of select="$formatted-date"/>
+          </xsl:if>
+          <!-- author here -->
+          <xsl:if test="$blog/author">
+            <i class="fa fa-user"></i><xsl:value-of select="$blog/author"/>
+          </xsl:if>
+        </div>
+        <!-- content here -->
+        <div class="entry">
+          <xsl:apply-templates select="$blog/text" />
+        </div>
       </div>
-      <!-- content here -->
-      <div class="entry">
-        <xsl:apply-templates select="$blog/text" />
+      <!-- ======= /content======= -->
+
+      <!-- ======= sidebar ======= -->
+      <div class="col-md-3 blog-sidebar" style="padding-top: 65px;">    
+          <xsl:call-template name="blog-sidebar"/>
       </div>
+      <!-- ======= /sidebar ======= -->    
+      
     </div>
+    
   </xsl:template>
 
   <!-- ========================================================================================= -->
@@ -2216,6 +2187,7 @@ or else only the first n items will be sorted -->
 <!--  ==================Recent posts widget==============================  -->
   <xsl:template name="recent-posts">
     <xsl:param name="recent"/>
+    
     <xsl:for-each select="exsl:node-set($recent)/blog">
         <li>
           <div class="thumb img-responsive" >
@@ -2252,13 +2224,33 @@ or else only the first n items will be sorted -->
   
 <!-- =================SIDEBAR=======================   -->
   <xsl:template name="blog-sidebar">
-<!--     <xsl:param name="bloglist"/> -->
-<!--     <xsl:param name="subset-recent"/> -->
-<!--     <xsl:param name="bloglist_list"/> -->
+
+   <!-- We need to get a sorted list of the articles before we grab the subset,
+or else only the first n items will be sorted -->
+    <xsl:variable name="sorted-articles">
+      <xsl:for-each select="//bloglist/blog">
+        <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
+        <xsl:choose>
+          <xsl:when test="@archived and @archived = 'yes'">
+            <!-- do nothing -->
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="."/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:variable>
     
-    <div class="col-md-3 blog-sidebar">
-        hello
-<!--         <section class="widget search">
+      <!--     recent articles subset -->
+    <xsl:variable name="subset-recent">
+        <xsl:for-each select="exsl:node-set($sorted-articles)/blog[position() &lt;= 5]">
+            <xsl:copy-of select="."/>
+        </xsl:for-each>
+    </xsl:variable>
+    
+<!--     <div class="col-md-3 blog-sidebar"> -->
+    <div>
+        <section class="widget search">
           <h3 class="sr-only title">Search Blog</h3>
           <form class="search-blog-form">
               <div class="form-group">
@@ -2268,10 +2260,10 @@ or else only the first n items will be sorted -->
                 <i class="fa fa-search"></i>
               </button>
           </form>
-        </section> -->
+        </section>
         <!--//search-->
         
-<!--         <section class="widget recent-posts blog-filters">
+        <section class="widget recent-posts blog-filters">
           <h3 class="title">Recent Posts</h3>
           <ul class="list-unstyled">
             
@@ -2282,25 +2274,25 @@ or else only the first n items will be sorted -->
             
           </ul>
         </section>
-         -->
-<!--         <div class="blog-filters">
+        
+        <div class="blog-filters">
           <div class="title">Categories</div>
           <xsl:call-template name="output-category-list-from-blog-node" mode="meta">
-            <xsl:with-param name="bloglist" select="$bloglist"/>
+            <xsl:with-param name="bloglist" select="//bloglist"/>
           </xsl:call-template>
         </div>
         <div class="blog-filters">
           <div class="title">Years</div>
           <xsl:call-template name="output-year-list-from-blog-node" mode="meta">
-            <xsl:with-param name="bloglist" select="$bloglist"/>
+            <xsl:with-param name="bloglist" select="//bloglist"/>
           </xsl:call-template>
         </div>
         <div class="blog-filters">
           <div class="title">Tags</div>
           <xsl:call-template name="output-tag-list-from-blog-node" mode="meta">
-            <xsl:with-param name="bloglist" select="$bloglist"/>
+            <xsl:with-param name="bloglist" select="//bloglist"/>
           </xsl:call-template>
-        </div> -->
+        </div>
       
       
       </div>
