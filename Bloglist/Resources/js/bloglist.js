@@ -219,8 +219,8 @@ function updateBlog(newBlog) {
     //if (i > 9) {console.log("whwhwhww");return;}
     var blogItem = blog[i];
     //For each article
-    article = jel("article");
-
+    article = jel("article").addClass("blogPost");
+    
     header = jel("div").addClass("blogheader").appendTo(article);
 
     title = jel("h2").appendTo(header);
@@ -230,7 +230,7 @@ function updateBlog(newBlog) {
 
     meta = jel("div").addClass("meta-line clearfix").appendTo(header);
 
-    metaLeft = jel("div").addClass("pull-left")
+    metaLeft = jel("div").addClass("row category-row")
     .appendTo(meta);
     categorySpan = jel("span").addClass("meta-category")
     .text("In:")
@@ -274,7 +274,7 @@ function updateBlog(newBlog) {
       .appendTo(categoryList);
     }
     //display the item's tags
-    metaRight = jel("div").addClass("pull-right")
+    metaRight = jel("div").addClass("row tag-row")
     .appendTo(meta);
     tagList = jel("ul").addClass("meta-tags").appendTo(metaRight);
     tagIcon = jel("i").addClass("fa fa-tags")
@@ -372,4 +372,6 @@ function updateBlog(newBlog) {
                     .text(container.data("filter-type") + ": " + container.data("filter-value"))
                     .appendTo(removeFilterButton);
   }
+  
+  window.scrollTo(0,400);
 }

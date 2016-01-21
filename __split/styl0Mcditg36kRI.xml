@@ -239,7 +239,9 @@ and display the full pagination-->
     </xsl:variable>
 
     <xsl:element name="article">
-      <div class="blogPost">
+      <xsl:attribute name="class">
+        <xsl:text>blogPost</xsl:text>
+      </xsl:attribute> 
         <!--START header-->
         <xsl:element name="div">
           <xsl:attribute name="class">
@@ -529,7 +531,6 @@ and display the full pagination-->
           <!--END .row-->
         </xsl:element>
         <!--END .entry-content-->
-      </div>
     </xsl:element>
   </xsl:template>
 
