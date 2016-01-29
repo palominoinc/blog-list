@@ -62,17 +62,7 @@ Illegal reproduction and disclosure will be prosecuted  -->
     <!-- We need to get a sorted list of the articles before we grab the subset,
 or else only the first n items will be sorted -->
     <xsl:variable name="sorted-articles">
-      <xsl:for-each select="./blog">
-        <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
-        <xsl:choose>
-          <xsl:when test="./@archived and ./@archived = 'yes'">
-            <!-- do nothing -->
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:copy-of select="."/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
+      <xsl:call-template name="sorted-articles"/>
     </xsl:variable>
     <!-- this subset represents the first page's items only -->
     <xsl:variable name="subset">
@@ -814,7 +804,9 @@ to use '.' to access it directly. -->
           <xsl:if test="./text()">
             
             <li>
+              <i class="fa fa-tags"></i>
               <xsl:element name="a">
+                
                 
                 <xsl:attribute name="href">
                   <!--                   <xsl:value-of select="$PATH"/> -->
@@ -832,11 +824,11 @@ to use '.' to access it directly. -->
                 
                 <xsl:value-of select="."/>
                 
-                <span class="count">
+<!--                 <span class="count">
                   <xsl:value-of select="'('"/>
                   <xsl:value-of select="./@count"/>
                   <xsl:value-of select="')'"/>
-                </span>
+                </span> -->
                 
               </xsl:element>
             </li>
@@ -893,7 +885,9 @@ to use '.' to access it directly. -->
           <xsl:if test="./text()">
             
             <li>
+              <i class="fa fa-tags"></i>
               <xsl:element name="a">
+                
                 <xsl:attribute name="href">
                   <xsl:value-of select="$PATH"/>
                   <xsl:text>#tag=</xsl:text>
@@ -910,11 +904,11 @@ to use '.' to access it directly. -->
                 
                 <xsl:value-of select="."/>
                 
-                <span class="count">
+<!--                 <span class="count">
                   <xsl:value-of select="'('"/>
                   <xsl:value-of select="./@count"/>
                   <xsl:value-of select="')'"/>
-                </span>
+                </span> -->
               </xsl:element>
             </li>
             
@@ -2028,8 +2022,16 @@ details
         <xsl:with-param name="blog-base-link" select="''"/>
       </xsl:apply-templates>
     </xsl:variable>
+    
+    <xsl:variable name="sorted-articles">
+      <xsl:call-template name="sorted-articles"/>
+    </xsl:variable>
 
     <xsl:variable name="blog" select="exsl:node-set($blog-tree)/blog"/>
+    
+    <xsl:variable name="blogname">
+      <xsl:value-of select="$blog/@name"/>
+    </xsl:variable>
     
     <div class="row">
       <!-- =======content======= -->
@@ -2074,7 +2076,8 @@ details
         
                         <!-- Buttons start here. Copy this ul to your document. -->
                         <ul class="rrssb-buttons clearfix rrssb-1">
-                            <li class="rrssb-facebook" data-initwidth="14.285714285714286" data-size="64" style="width: calc(25% - 31.5px);">
+<!--                             <li class="rrssb-facebook" data-initwidth="14.285714285714286" data-size="64" style="width: calc(25% - 31.5px);"> -->
+                          <li class="rrssb-facebook" data-initwidth="14.285714285714286" data-size="64" style="width: 42px;">
                                 <!-- Replace with your URL. For best results, make sure you page has the proper FB Open Graph tags in header:
                                 https://developers.facebook.com/docs/opengraph/howtos/maximizing-distribution-media-content/ -->
                               <xsl:element name="a">
@@ -2117,10 +2120,11 @@ details
                                       </xsl:element>
                                       
                                     </span>
-                                    <span class="rrssb-text">facebook</span>
+<!--                                     <span class="rrssb-text">facebook</span> -->
                                 </xsl:element>
                             </li>
-                            <li class="rrssb-twitter" data-initwidth="14.285714285714286" data-size="49" style="width: calc(25% - 31.5px);">
+<!--                             <li class="rrssb-twitter" data-initwidth="14.285714285714286" data-size="49" style="width: calc(25% - 31.5px);"> -->
+                              <li class="rrssb-twitter" data-initwidth="14.285714285714286" data-size="49" style="width: 42px;">
                                 <!-- Replace href with your Meta and URL information  -->
                                 
                                   <xsl:element name="a">
@@ -2162,10 +2166,11 @@ details
                                       </xsl:element>
                                         
                                    </span>
-                                    <span class="rrssb-text">twitter</span>
+<!--                                     <span class="rrssb-text">twitter</span> -->
                                  </xsl:element>
                             </li>
-                            <li class="rrssb-reddit" data-initwidth="14.285714285714286" data-size="41" style="width: calc(25% - 31.5px);">
+<!--                             <li class="rrssb-reddit" data-initwidth="14.285714285714286" data-size="41" style="width: calc(25% - 31.5px);"> -->
+                          <li class="rrssb-reddit" data-initwidth="14.285714285714286" data-size="41" style="width: 42px;">
                                
                                   <xsl:element name="a">
                                     <xsl:attribute name="href">
@@ -2210,10 +2215,11 @@ details
                                         
                                       </xsl:element>
                                     </span>
-                                      <span class="rrssb-text">reddit</span>
+<!--                                       <span class="rrssb-text">reddit</span> -->
                                 </xsl:element>
                             </li>
-                            <li class="rrssb-googleplus" data-initwidth="14.285714285714286" data-size="56" style="width: calc(25% - 31.5px);">
+<!--                             <li class="rrssb-googleplus" data-initwidth="14.285714285714286" data-size="56" style="width: calc(25% - 31.5px);"> -->
+                              <li class="rrssb-googleplus" data-initwidth="14.285714285714286" data-size="56" style="width: 42px;">
                                 <!-- Replace href with your meta and URL information.  -->
                                <xsl:element name="a">
                                     <xsl:attribute name="href">
@@ -2266,7 +2272,7 @@ details
                                       </xsl:element>
                                         
                                     </span>
-                                    <span class="rrssb-text">google+</span>
+<!--                                     <span class="rrssb-text">google+</span> -->
                               </xsl:element>
                             </li>
                             <li class="rrssb-linkedin small" data-initwidth="14.285714285714286" data-size="52" style="width: 42px;">
@@ -2400,8 +2406,33 @@ details
                     <div class="clearfix"></div>
                     <!--  Navigation  Next/Previous  -->
                     <nav class="post-nav">
-    						<span class="nav-previous"><a href="#" rel="prev"><i class="fa fa-long-arrow-left"></i>Previous</a></span>
-    						<span class="nav-next"><a href="#" rel="next">Next<i class="fa fa-long-arrow-right"></i></a></span>
+    						<span class="nav-previous">
+                              <xsl:element name="a">
+                                <xsl:attribute name="href">
+                                  <xsl:value-of select="$PATH"/>
+                                  <xsl:text>?node=</xsl:text>
+                                  <xsl:value-of select="exsl:node-set($sorted-articles)/blog[./@name=$blogname]/preceding-sibling::blog[1]/@name"/>
+                                </xsl:attribute>
+                                <xsl:attribute name="rel">prev</xsl:attribute>
+                                <i class="fa fa-long-arrow-left"></i>
+                                <xsl:text>Previous</xsl:text>
+                              </xsl:element>
+                              
+                                
+                            
+                            </span>
+    						<span class="nav-next">
+                              <xsl:element name="a">
+                                <xsl:attribute name="href">
+                                  <xsl:value-of select="$PATH"/>
+                                  <xsl:text>?node=</xsl:text>
+                                  <xsl:value-of select="exsl:node-set($sorted-articles)/blog[./@name=$blogname]/following-sibling::blog[1]/@name"/>
+                                </xsl:attribute>
+                                <xsl:attribute name="rel">next</xsl:attribute>
+                                <xsl:text>Next</xsl:text>
+                                <i class="fa fa-long-arrow-right"></i>
+                              </xsl:element>
+                            </span>
     				</nav>
 
             </div>
@@ -2783,20 +2814,7 @@ or else only the first n items will be sorted -->
    <!-- We need to get a sorted list of the articles before we grab the subset,
 or else only the first n items will be sorted -->
     <xsl:variable name="sorted-articles">
-      <xsl:for-each select="//bloglist/blog">
-        <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
-        
-        <xsl:choose>
-          <xsl:when test="@archived and @archived = 'yes'">
-            <!-- do nothing -->
-          </xsl:when>
-          
-          <xsl:otherwise>
-            <xsl:copy-of select="."/>
-          </xsl:otherwise>
-        </xsl:choose>
-        
-      </xsl:for-each>
+      <xsl:call-template name="sorted-articles"/>
     </xsl:variable>
     
       <!--     recent articles subset -->
@@ -2900,6 +2918,25 @@ or else only the first n items will be sorted -->
         <xsl:value-of select="')'"/>
       </span>
     </xsl:element>
+    
+  </xsl:template>
+  
+  <xsl:template name="sorted-articles">
+  
+      <xsl:for-each select="//bloglist/blog">
+        <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
+        
+        <xsl:choose>
+          <xsl:when test="@archived and @archived = 'yes'">
+            <!-- do nothing -->
+          </xsl:when>
+          
+          <xsl:otherwise>
+            <xsl:copy-of select="."/>
+          </xsl:otherwise>
+        </xsl:choose>
+        
+      </xsl:for-each>
     
   </xsl:template>
   
