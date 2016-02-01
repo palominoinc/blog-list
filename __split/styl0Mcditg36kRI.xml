@@ -88,12 +88,22 @@ or else only the first n items will be sorted -->
           <xsl:attribute name="data-bloglist-id">
             <xsl:value-of select="./@id"/>
           </xsl:attribute>
-          <xsl:for-each select="exsl:node-set($subset)/blog">
-            <xsl:apply-templates select="." mode="img"/>
-          </xsl:for-each>
+          
           <xsl:element name="div">
             <xsl:attribute name="class">
-              <xsl:text>pagination</xsl:text>
+               <xsl:text>grid</xsl:text>
+            </xsl:attribute>
+            
+            <div class="grid-sizer col-sm-6"></div>
+            
+            <xsl:for-each select="exsl:node-set($subset)/blog">
+              <xsl:apply-templates select="." mode="img"/>
+            </xsl:for-each>
+          </xsl:element>
+          
+          <xsl:element name="div">
+            <xsl:attribute name="class">
+              <xsl:text>pagination col-sm-12</xsl:text>
             </xsl:attribute>
             <!-- show which items we are display e.g. 1-10 -->
             <xsl:element name="div">
@@ -156,7 +166,19 @@ and display the full pagination-->
 
     <!-- END output the bloglist -->
     <!--     <script src="/resources/Bloglist/js/bloglist.js"></script> -->
-    <script src="?f=extensions/bloglist/Bloglist/Resources/js/bloglist.js"></script>
+    <xsl:call-template name="include-bloglist-js"/>
+<!--     <script src="?f=extensions/bloglist/Bloglist/Resources/js/bloglist.js"></script>
+    <script src="?f=extensions/bloglist/Bloglist/Resources/js/masonry.pkgd.min.js"></script> -->
+<!--       <script type="text/javascript">
+       $(document).ready(function(){
+          $('.grid').masonry({
+          
+          itemSelector: '.grid-item',
+          columnWidth: 200
+        });
+      }
+    </script> -->
+
   </xsl:template>
 
   <!--   <xsl:apply-templates select="./text" mode="placeholder"/> -->
@@ -175,6 +197,8 @@ and display the full pagination-->
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+  
   <xsl:template match="blog/text" mode="placeholder">
     <!-- Get the transformed XML -->
     <!--     <xsl:variable name="transformed-data">
@@ -227,16 +251,107 @@ and display the full pagination-->
     <xsl:variable name="blog-summary">
       <xsl:value-of select="concat(substring($blog-text, 0, 300), '...')"/>
     </xsl:variable>
-
+    
+    
     <xsl:element name="article">
       <xsl:attribute name="class">
-        <xsl:text>blogPost</xsl:text>
+        <xsl:text>blogPost grid-item col-sm-6</xsl:text>
       </xsl:attribute> 
+      
+      <xsl:element name="div">
+        <xsl:attribute name="class">
+          <xsl:text>grid-item-content</xsl:text>
+        </xsl:attribute>      
+      
+<!--START .row-->
+      <xsl:element name="div">
+        <xsl:attribute name="class">
+          <xsl:text>row</xsl:text>
+        </xsl:attribute>
+
+        <!--START figure.blog-image-->
+        <xsl:element name="figure">
+          <xsl:attribute name="class">
+            <xsl:text>blog-image</xsl:text>
+          </xsl:attribute>
+
+          <xsl:element name="a">
+            <xsl:attribute name="href">
+              <xsl:value-of select="$blog-link"/>
+            </xsl:attribute>
+
+            <!--date-->
+<!--             <xsl:element name="div">
+              <xsl:attribute name="class">
+                <xsl:text>blog-date-info</xsl:text>
+              </xsl:attribute>
+
+              <xsl:element name="span">
+                <xsl:attribute name="class">
+                  <xsl:text>blog-month</xsl:text>
+                </xsl:attribute>
+
+                <xsl:call-template name="format-date-blog">
+                  <xsl:with-param name="date" select="./@date"/>
+                  <xsl:with-param name="format" select="'MMM'"/>
+                </xsl:call-template>
+
+              </xsl:element>
+
+              <xsl:element name="span">
+                <xsl:attribute name="class">
+                  <xsl:text>blog-day</xsl:text>
+                </xsl:attribute>
+
+                <xsl:call-template name="format-date-blog">
+                  <xsl:with-param name="date" select="./@date"/>
+                  <xsl:with-param name="format" select="'D'"/>
+                </xsl:call-template>
+
+              </xsl:element>
+
+              <xsl:element name="span">
+                <xsl:attribute name="class">
+                  <xsl:text>blog-year</xsl:text>
+                </xsl:attribute>
+
+                <xsl:call-template name="format-date-blog">
+                  <xsl:with-param name="date" select="./@date"/>
+                  <xsl:with-param name="format" select="'YYYY'"/>
+                </xsl:call-template>
+              </xsl:element>
+            </xsl:element> -->
+
+            <!--image-->
+            <xsl:choose>
+              <xsl:when test="./image">
+                <xsl:call-template name="render-image-as-img">
+                  <xsl:with-param name="src" select="./image/@src"/>
+                  <xsl:with-param name="width" select="400"/>
+                  <xsl:with-param name="height" select="1000"/>
+                </xsl:call-template>
+              </xsl:when>
+
+              <xsl:otherwise>
+                <xsl:element name="img">
+                  <xsl:attribute name="src">
+                    <xsl:text>//placehold.it/330x210</xsl:text>
+                  </xsl:attribute>
+                </xsl:element>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:element>
+        </xsl:element>
+        <!--END figure.blog-image-->
+    
+      <!--END .col-sm-5-->
+      </xsl:element>
         <!--START header-->
         <xsl:element name="div">
           <xsl:attribute name="class">
             <xsl:text>blogheader</xsl:text>
           </xsl:attribute>
+          
           <!--title-->
           <xsl:element name="h2">
             <xsl:element name="a">
@@ -246,177 +361,23 @@ and display the full pagination-->
               <xsl:value-of select="./title"/>
             </xsl:element>
           </xsl:element>
-          <!--START .meta-line-->
-          <xsl:element name="div">
-            <xsl:attribute name="class">
-              <xsl:text>meta-line clearfix</xsl:text>
-            </xsl:attribute>
-            <xsl:element name="div">
-              <xsl:attribute name="class">
-<!--                 <xsl:text>pull-left</xsl:text> -->
-                <xsl:text>row category-row</xsl:text>
-              </xsl:attribute>
-
-              <!--author-->
-              <!--             <xsl:element name="span">
-<xsl:attribute name="class">
-<xsl:text>meta-author</xsl:text>
-</xsl:attribute> -->
-              <!--START author icon-->
-              <!--               <i class="fa fa-user"></i> -->
-              <!--END author icon-->
-              <!--               <xsl:text>Author: </xsl:text>
-<xsl:choose>
-<xsl:when test="./author">
-<xsl:value-of select="./author"/>
-</xsl:when>
-<xsl:otherwise>
-<xsl:text>BDDC</xsl:text>
-</xsl:otherwise>
-</xsl:choose>
-</xsl:element> -->
-
-              <!--category-->
-              <xsl:element name="span">
-                <xsl:attribute name="class">
-                  <xsl:text>meta-category</xsl:text>
-                </xsl:attribute>
-                <!--START category icon-->
-                <!--               <i class="fa fa-archive"></i> -->
-                <!--END category icon-->
-                <xsl:text>In: </xsl:text>
-                <xsl:element name="ul">
-                  <!-- main category -->
-                  <xsl:if test="./categories/main-category">
-                    <xsl:variable name="main-category-link">
-                      <!--                     <xsl:value-of select="$PATH"/> -->
-                      <xsl:text>#category=</xsl:text>
-                      <xsl:value-of select="./categories/main-category"/>
-                    </xsl:variable>
-                    <xsl:element name="li">
-                      <xsl:attribute name="class">
-                        <xsl:text>main-category</xsl:text>
-                      </xsl:attribute>
-                      <xsl:attribute name="style">display:inline-block;</xsl:attribute>
-                      <xsl:element name="a">
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$main-category-link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="data-filter-type">
-                          <xsl:text>category</xsl:text>
-                        </xsl:attribute>
-                        <xsl:attribute name="data-filter-value">
-                          <xsl:value-of select="./categories/main-category"/>
-                        </xsl:attribute>
-                        <xsl:value-of select="./categories/main-category"/>
-                      </xsl:element>
-                    </xsl:element>
-                  </xsl:if>
-                  <xsl:choose>
-                    <xsl:when test="count(./categories/*) &gt; 1">
-
-                      <xsl:for-each select="./categories/category">
-                        <!--TODO: Create category link properly-->
-                        <xsl:variable name="category-link">
-                          <!--                         <xsl:value-of select="$PATH"/> -->
-                          <xsl:text>#category=</xsl:text>
-                          <xsl:value-of select="."/>
-                        </xsl:variable>
-                        
-                        <xsl:element name="li">
-                          
-                          <xsl:attribute name="class">
-                            <xsl:text>category</xsl:text>
-                          </xsl:attribute>
-                          
-                          <xsl:attribute name="style">display:inline-block;</xsl:attribute>
-                          
-                          <xsl:element name="a">
-                            
-                            <xsl:attribute name="href">
-                              <xsl:value-of select="$category-link"/>
-                            </xsl:attribute>
-                            
-                            <xsl:attribute name="data-filter-type">
-                              <xsl:text>category</xsl:text>
-                            </xsl:attribute>
-                            
-                            <xsl:attribute name="data-filter-value">
-                              <xsl:value-of select="."/>
-                            </xsl:attribute>
-                            
-                            <xsl:value-of select="."/>
-                          </xsl:element>
-                          
-                        </xsl:element>
-                      </xsl:for-each>
-
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <!--                     <i>None</i> -->
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:element>
-              </xsl:element>
-            </xsl:element>
-            <xsl:element name="div">
-              <xsl:attribute name="class">
-<!--                 <xsl:text>pull-right</xsl:text> -->
-                <xsl:text>row tag-row</xsl:text>
-              </xsl:attribute>
-              <!--tags-->
-              <xsl:element name="ul">
-                <xsl:attribute name="class">
-                  <xsl:text>meta-tags</xsl:text>
-                </xsl:attribute>
-                  <!--START tag icon-->
-                  <xsl:choose>
-                    <xsl:when test="count(./tags/*) &gt; 0">
-                      <i class="fa fa-tags"></i>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <!--                     <i class="fa fa-tag"></i> -->
-                      <!--                     <i class="fa fa-tag"></i><i>None</i> -->
-                    </xsl:otherwise>
-                  </xsl:choose>
-                  <!--END tag icon-->
-                  <xsl:for-each select="./tags/*">
-                    <!--TODO: Create xsl tag link properly-->
-                    <xsl:variable name="tag-link">
-                      <!--                     <xsl:value-of select="$PATH"/> -->
-                      <xsl:text>#tag=</xsl:text>
-                      <xsl:value-of select="."/>
-                    </xsl:variable>
-                    
-                    <xsl:element name="li">
-                      <xsl:attribute name="class">
-                        <xsl:text>tag</xsl:text>
-                      </xsl:attribute>
-                      
-                      <xsl:attribute name="style">display:inline-block;</xsl:attribute>
-                     
-                      <xsl:element name="a">
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$tag-link"/>
-                        </xsl:attribute>
-                        
-                        <xsl:attribute name="data-filter-type">
-                          <xsl:text>tag</xsl:text>
-                        </xsl:attribute>
-                        
-                        <xsl:attribute name="data-filter-value">
-                          <xsl:value-of select="."/>
-                        </xsl:attribute>
-                        
-                        <xsl:value-of select="."/>
-                      </xsl:element>
-                    </xsl:element>
-                  </xsl:for-each>
-              </xsl:element>
-            </xsl:element>
-            <!--END .meta-line-->
-          </xsl:element>
+          
+          
+            
+            <xsl:variable name="formatted-date">
+              <xsl:call-template name="format-date-blog">
+                <xsl:with-param name="format" select="'dd_Mon_yyyy'"/>
+                <xsl:with-param name="date" select="./@date"/>
+              </xsl:call-template>
+            </xsl:variable>
+            
+            <i class="fa fa-calendar" style="padding-right: 5px; margin-bottom:10px;"></i><xsl:value-of select="$formatted-date"/>
+         
+          
+          <xsl:call-template name="meta-line"/>
+              
         </xsl:element>
+        
         <!--END header-->
         <!--START .entry-content-->
         <xsl:element name="div">
@@ -431,93 +392,12 @@ and display the full pagination-->
               <xsl:text>row</xsl:text>
             </xsl:attribute>
             
-            <!--START .col-sm-5-->
-            <xsl:element name="div">
-              <xsl:attribute name="class">
-                <xsl:text>col-md-5</xsl:text>
-              </xsl:attribute>
-              
-              <!--START figure.blog-image-->
-              <xsl:element name="figure">
-                <xsl:attribute name="class">
-                  <xsl:text>blog-image</xsl:text>
-                </xsl:attribute>
-                
-                <xsl:element name="a">
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="$blog-link"/>
-                  </xsl:attribute>
-                  
-                  <!--date-->
-                  <xsl:element name="div">
-                    <xsl:attribute name="class">
-                      <xsl:text>blog-date-info</xsl:text>
-                    </xsl:attribute>
-                    
-                    <xsl:element name="span">
-                      <xsl:attribute name="class">
-                        <xsl:text>blog-month</xsl:text>
-                      </xsl:attribute>
-                      
-                      <xsl:call-template name="format-date-blog">
-                        <xsl:with-param name="date" select="./@date"/>
-                        <xsl:with-param name="format" select="'MMM'"/>
-                      </xsl:call-template>
-                      
-                    </xsl:element>
-                    
-                    <xsl:element name="span">
-                      <xsl:attribute name="class">
-                        <xsl:text>blog-day</xsl:text>
-                      </xsl:attribute>
-                      
-                      <xsl:call-template name="format-date-blog">
-                        <xsl:with-param name="date" select="./@date"/>
-                        <xsl:with-param name="format" select="'D'"/>
-                      </xsl:call-template>
-                      
-                    </xsl:element>
-                    
-                    <xsl:element name="span">
-                      <xsl:attribute name="class">
-                        <xsl:text>blog-year</xsl:text>
-                      </xsl:attribute>
-                      
-                      <xsl:call-template name="format-date-blog">
-                        <xsl:with-param name="date" select="./@date"/>
-                        <xsl:with-param name="format" select="'YYYY'"/>
-                      </xsl:call-template>
-                    </xsl:element>
-                  </xsl:element>
-                  
-                  <!--image-->
-                  <xsl:choose>
-                    <xsl:when test="./image">
-                      <xsl:call-template name="render-image-as-img">
-                        <xsl:with-param name="src" select="./image/@src"/>
-                        <xsl:with-param name="width" select="330"/>
-                        <xsl:with-param name="height" select="210"/>
-                      </xsl:call-template>
-                    </xsl:when>
-                    
-                    <xsl:otherwise>
-                      <xsl:element name="img">
-                        <xsl:attribute name="src">
-                          <xsl:text>//placehold.it/330x210</xsl:text>
-                        </xsl:attribute>
-                      </xsl:element>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:element>
-              </xsl:element>
-              <!--END figure.blog-image-->
-            </xsl:element>
-            <!--END .col-sm-5-->
             
-            <!--START .col-sm-7-->
+            
+            <!--START .row-->
             <xsl:element name="div">
               <xsl:attribute name="class">
-                <xsl:text>col-md-7</xsl:text>
+                <xsl:text>col-sm-12</xsl:text>
               </xsl:attribute>
               
               <xsl:element name="div">
@@ -546,7 +426,7 @@ and display the full pagination-->
                 </xsl:element>
               </xsl:element>
             </xsl:element>
-            <!--END .col-sm-7-->
+            <!--END .row-->
           </xsl:element>
           <!--START .col-sm-12-->
           
@@ -560,6 +440,8 @@ and display the full pagination-->
         </xsl:element>
         <!--END .entry-content-->
     </xsl:element>
+      </xsl:element>
+    
   </xsl:template>
 
   <xsl:template name="render-image-as-img">
@@ -595,7 +477,16 @@ and display the full pagination-->
   </xsl:template>
   
   <xsl:template name="include-bloglist-js">
+<!--      <script type="text/javascript" src="?f=extensions/design-templates/DesignTemplates/Resources/plugins/jquery-1.11.3.min.js"></script> -->
+    <!--   imagesloaded plugin   -->
+<!--     <script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script> -->
+    
     <script src="/resources/Bloglist/js/bloglist.js"></script>
+<!--     <script src="/resources/Bloglist/js/masonry.pkgd.min.js"></script> -->
+<!--     <script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script> -->
+    
+         <!--   imagesloaded plugin   -->
+   
   </xsl:template>
 
   <!-- output a list of years with articles and the amount of articles in that year -->
@@ -824,11 +715,6 @@ to use '.' to access it directly. -->
                 
                 <xsl:value-of select="."/>
                 
-<!--                 <span class="count">
-                  <xsl:value-of select="'('"/>
-                  <xsl:value-of select="./@count"/>
-                  <xsl:value-of select="')'"/>
-                </span> -->
                 
               </xsl:element>
             </li>
@@ -1613,6 +1499,11 @@ add sorting by priority number as an extra sort criteria
           }
           );
           });
+          
+              
+
+
+
 
         </script>
 
@@ -2050,12 +1941,14 @@ details
               </xsl:call-template>
             </xsl:variable>
             
-            <i class="fa fa-calendar" style="padding-right: 5px;"></i><xsl:value-of select="$formatted-date"/>
+            <i class="fa fa-calendar" style="padding-right: 5px; margin-bottom:15px;"></i><xsl:value-of select="$formatted-date"/>
           </xsl:if>
           <!-- author here -->
           <xsl:if test="$blog/author">
             <i class="fa fa-user"></i><xsl:value-of select="$blog/author"/>
           </xsl:if>
+          
+          <xsl:call-template name="meta-line"/>
         </div>
         
         <!-- content here -->
@@ -2448,6 +2341,8 @@ details
       
     </div>
     
+    
+    
   </xsl:template>
   
 
@@ -2826,7 +2721,7 @@ or else only the first n items will be sorted -->
     
 <!--     <div class="col-md-3 blog-sidebar"> -->
     <div>
-        <section class="widget search">
+<!--         <section class="widget search">
           <h3 class="sr-only title">Search Blog</h3>
           <form class="search-blog-form">
               <div class="form-group">
@@ -2836,7 +2731,7 @@ or else only the first n items will be sorted -->
                 <i class="fa fa-search"></i>
               </button>
           </form>
-        </section>
+        </section> -->
         <!--//search-->
       
 <!--      parent::* -->
@@ -2940,4 +2835,180 @@ or else only the first n items will be sorted -->
     
   </xsl:template>
   
+<!--===============================================================================  -->
+<!--============================Meta line for blog headers=========================  -->
+<!--===============================================================================  -->
+  <xsl:template name="meta-line">
+    <xsl:element name="div">
+            <xsl:attribute name="class">
+              <xsl:text>meta-line clearfix</xsl:text>
+            </xsl:attribute>
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+<!--                 <xsl:text>pull-left</xsl:text> -->
+                <xsl:text>row category-row</xsl:text>
+              </xsl:attribute>
+
+              <!--author-->
+              <!--             <xsl:element name="span">
+<xsl:attribute name="class">
+<xsl:text>meta-author</xsl:text>
+</xsl:attribute> -->
+              <!--START author icon-->
+              <!--               <i class="fa fa-user"></i> -->
+              <!--END author icon-->
+              <!--               <xsl:text>Author: </xsl:text>
+<xsl:choose>
+<xsl:when test="./author">
+<xsl:value-of select="./author"/>
+</xsl:when>
+<xsl:otherwise>
+<xsl:text>BDDC</xsl:text>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:element> -->
+              <!--category-->
+              <xsl:element name="span">
+                <xsl:attribute name="class">
+                  <xsl:text>meta-category</xsl:text>
+                </xsl:attribute>
+                <!--START category icon-->
+                <!--               <i class="fa fa-archive"></i> -->
+                <!--END category icon-->
+                <xsl:text>In: </xsl:text>
+                <xsl:element name="ul">
+                  <!-- main category -->
+                  <xsl:if test="./categories/main-category">
+                    <xsl:variable name="main-category-link">
+                      <!--                     <xsl:value-of select="$PATH"/> -->
+                      <xsl:text>#category=</xsl:text>
+                      <xsl:value-of select="./categories/main-category"/>
+                    </xsl:variable>
+                    <xsl:element name="li">
+                      <xsl:attribute name="class">
+                        <xsl:text>main-category</xsl:text>
+                      </xsl:attribute>
+                      <xsl:attribute name="style">display:inline-block;</xsl:attribute>
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$PATH"/>
+                          <xsl:value-of select="$main-category-link"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-type">
+                          <xsl:text>category</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-filter-value">
+                          <xsl:value-of select="./categories/main-category"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="./categories/main-category"/>
+                      </xsl:element>
+                    </xsl:element>
+                  </xsl:if>
+                  <xsl:choose>
+                    <xsl:when test="count(./categories/*) &gt; 1">
+
+                      <xsl:for-each select="./categories/category">
+                        <!--TODO: Create category link properly-->
+                        <xsl:variable name="category-link">
+                          <!--                         <xsl:value-of select="$PATH"/> -->
+                          <xsl:text>#category=</xsl:text>
+                          <xsl:value-of select="."/>
+                        </xsl:variable>
+                        
+                        <xsl:element name="li">
+                          
+                          <xsl:attribute name="class">
+                            <xsl:text>category</xsl:text>
+                          </xsl:attribute>
+                          
+                          <xsl:attribute name="style">display:inline-block;</xsl:attribute>
+                          
+                          <xsl:element name="a">
+                            
+                            <xsl:attribute name="href">
+                              <xsl:value-of select="$PATH"/>
+                              <xsl:value-of select="$category-link"/>
+                            </xsl:attribute>
+                            
+                            <xsl:attribute name="data-filter-type">
+                              <xsl:text>category</xsl:text>
+                            </xsl:attribute>
+                            
+                            <xsl:attribute name="data-filter-value">
+                              <xsl:value-of select="."/>
+                            </xsl:attribute>
+                            
+                            <xsl:value-of select="."/>
+                          </xsl:element>
+                          
+                        </xsl:element>
+                      </xsl:for-each>
+
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <!--                     <i>None</i> -->
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:element>
+              </xsl:element>
+            </xsl:element>
+            <xsl:element name="div">
+              <xsl:attribute name="class">
+<!--                 <xsl:text>pull-right</xsl:text> -->
+                <xsl:text>row tag-row</xsl:text>
+              </xsl:attribute>
+              <!--tags-->
+              <xsl:element name="ul">
+                <xsl:attribute name="class">
+                  <xsl:text>meta-tags</xsl:text>
+                </xsl:attribute>
+                  <!--START tag icon-->
+                  <xsl:choose>
+                    <xsl:when test="count(./tags/*) &gt; 0">
+                      <i class="fa fa-tags"></i>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <!--                     <i class="fa fa-tag"></i> -->
+                      <!--                     <i class="fa fa-tag"></i><i>None</i> -->
+                    </xsl:otherwise>
+                  </xsl:choose>
+                  <!--END tag icon-->
+                  <xsl:for-each select="./tags/*">
+                    <!--TODO: Create xsl tag link properly-->
+                    <xsl:variable name="tag-link">
+                      <!--                     <xsl:value-of select="$PATH"/> -->
+                      <xsl:text>#tag=</xsl:text>
+                      <xsl:value-of select="."/>
+                    </xsl:variable>
+                    
+                    <xsl:element name="li">
+                      <xsl:attribute name="class">
+                        <xsl:text>tag</xsl:text>
+                      </xsl:attribute>
+                      
+                      <xsl:attribute name="style">display:inline-block;</xsl:attribute>
+                     
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$PATH"/>
+                          <xsl:value-of select="$tag-link"/>
+                        </xsl:attribute>
+                        
+                        <xsl:attribute name="data-filter-type">
+                          <xsl:text>tag</xsl:text>
+                        </xsl:attribute>
+                        
+                        <xsl:attribute name="data-filter-value">
+                          <xsl:value-of select="."/>
+                        </xsl:attribute>
+                        
+                        <xsl:value-of select="."/>
+                      </xsl:element>
+                    </xsl:element>
+                  </xsl:for-each>
+              </xsl:element>
+            </xsl:element>
+            <!--END .meta-line-->
+          </xsl:element>
+  </xsl:template>
 </xsl:stylesheet>]]></stylesheet>
