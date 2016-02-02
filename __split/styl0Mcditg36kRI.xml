@@ -151,7 +151,7 @@ and display the full pagination-->
       </div>
       
 <!--=================sidebar==================-->
-      <div class="col-md-3 blog-sidebar" style="padding-top: 75px;">
+      <div class="col-md-3 blog-sidebar" style="padding-top: 55px;">
         
         <xsl:call-template name="blog-sidebar">
 
@@ -252,27 +252,28 @@ and display the full pagination-->
       <xsl:value-of select="concat(substring($blog-text, 0, 300), '...')"/>
     </xsl:variable>
     
-    
-    <xsl:element name="article">
-      <xsl:attribute name="class">
-        <xsl:text>blogPost grid-item col-sm-6</xsl:text>
-      </xsl:attribute> 
-      
-      <xsl:element name="div">
+    <xsl:element name="div">
         <xsl:attribute name="class">
-          <xsl:text>grid-item-content</xsl:text>
-        </xsl:attribute>      
-      
-<!--START .row-->
-      <xsl:element name="div">
-        <xsl:attribute name="class">
-          <xsl:text>row</xsl:text>
+          <xsl:text>grid-item col-sm-6</xsl:text>
         </xsl:attribute>
+      
+       <xsl:element name="div">
+        <xsl:attribute name="class">
+          <xsl:text>grid-item-content col-sm-12</xsl:text>
+        </xsl:attribute>    
+    
+        <xsl:element name="article">
+          <xsl:attribute name="class">
+            <xsl:text>blogPost </xsl:text>
+          </xsl:attribute> 
+      
+       
+      
 
         <!--START figure.blog-image-->
         <xsl:element name="figure">
           <xsl:attribute name="class">
-            <xsl:text>blog-image</xsl:text>
+            <xsl:text>blog-image row</xsl:text>
           </xsl:attribute>
 
           <xsl:element name="a">
@@ -327,7 +328,7 @@ and display the full pagination-->
               <xsl:when test="./image">
                 <xsl:call-template name="render-image-as-img">
                   <xsl:with-param name="src" select="./image/@src"/>
-                  <xsl:with-param name="width" select="400"/>
+                  <xsl:with-param name="width" select="767"/>
                   <xsl:with-param name="height" select="1000"/>
                 </xsl:call-template>
               </xsl:when>
@@ -344,8 +345,12 @@ and display the full pagination-->
         </xsl:element>
         <!--END figure.blog-image-->
     
-      <!--END .col-sm-5-->
-      </xsl:element>
+        <!--START .col-sm-12-->
+        <xsl:element name="div">
+        <xsl:attribute name="class">
+          <xsl:text>col-sm-12</xsl:text>
+        </xsl:attribute>
+     
         <!--START header-->
         <xsl:element name="div">
           <xsl:attribute name="class">
@@ -428,6 +433,9 @@ and display the full pagination-->
             </xsl:element>
             <!--END .row-->
           </xsl:element>
+           
+      
+        
           <!--START .col-sm-12-->
           
           <xsl:element name="div">
@@ -437,10 +445,14 @@ and display the full pagination-->
             <!--           <xsl:apply-templates select="./text" mode="placeholder"/> -->
           </xsl:element>
           <!--END .row-->
-        </xsl:element>
-        <!--END .entry-content-->
+          
+         </xsl:element><!--END .entry-content-->
+        </xsl:element><!--END .col-sm-12-->
+        
+      </xsl:element><!--END .article-->
+      
+      </xsl:element><!--END grid-item-content-->
     </xsl:element>
-      </xsl:element>
     
   </xsl:template>
 
