@@ -369,14 +369,7 @@ and display the full pagination-->
           
           
             
-            <xsl:variable name="formatted-date">
-              <xsl:call-template name="format-date-blog">
-                <xsl:with-param name="format" select="'dd_Mon_yyyy'"/>
-                <xsl:with-param name="date" select="./@date"/>
-              </xsl:call-template>
-            </xsl:variable>
             
-            <i class="fa fa-calendar" style="padding-right: 5px; margin-bottom:10px;"></i><xsl:value-of select="$formatted-date"/>
          
           
           <xsl:call-template name="meta-line"/>
@@ -1943,23 +1936,7 @@ details
           <xsl:value-of select="$blog/title"/>
         </h1>
         <div class="meta" style="padding-bottom: 10px;">
-          <!-- date here -->
-          <xsl:if test="contains(../@layout,'date')">
-            
-            <xsl:variable name="formatted-date">
-              <xsl:call-template name="format-date-blog">
-                <xsl:with-param name="format" select="../@date-format"/>
-                <xsl:with-param name="date" select="$blog/@date"/>
-              </xsl:call-template>
-            </xsl:variable>
-            
-            <i class="fa fa-calendar" style="padding-right: 5px; margin-bottom:15px;"></i><xsl:value-of select="$formatted-date"/>
-          </xsl:if>
-          <!-- author here -->
-          <xsl:if test="$blog/author">
-            <i class="fa fa-user"></i><xsl:value-of select="$blog/author"/>
-          </xsl:if>
-          
+           
           <xsl:call-template name="meta-line"/>
         </div>
         
@@ -2855,6 +2832,25 @@ or else only the first n items will be sorted -->
             <xsl:attribute name="class">
               <xsl:text>meta-line clearfix</xsl:text>
             </xsl:attribute>
+      
+            <!-- date here -->
+            <xsl:variable name="formatted-date">
+              <xsl:call-template name="format-date-blog">
+                <xsl:with-param name="format" select="'dd_Mon_yyyy'"/>
+                <xsl:with-param name="date" select="./@date"/>
+              </xsl:call-template>
+            </xsl:variable>
+            
+            <i class="fa fa-calendar" style="padding-right: 5px; margin-bottom:10px;"></i><xsl:value-of select="$formatted-date"/>
+            
+      
+            <!-- author here -->
+            <xsl:if test="./@author != ''">
+              <xsl:text> | </xsl:text>
+              <i class="fa fa-user" style="padding-right: 5px; margin-bottom:10px;"></i>
+              <xsl:value-of select="./@author"/>
+            </xsl:if>
+      
             <xsl:element name="div">
               <xsl:attribute name="class">
 <!--                 <xsl:text>pull-left</xsl:text> -->

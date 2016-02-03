@@ -42,11 +42,12 @@
     <attribute name="archived" use="oneof" type="wpString" value="no,yes" />
     <attribute name="upcoming" use="oneof" type="wpString" value="no,yes" />
     <attribute name="date" type="wpDate"/>
+    <attribute name="author" type="wpString" maxOccurs="1"/>
     <element name="title" type="wpStringL" />
     <element name="text" type="wpHtml" minOccurs="1"/>
     <element name="tags" type="wpBlogTags" maxOccurs="1"/>
     <element name="categories" type="wpBlogCategories" maxOccurs="1"/>
-    <element name="image" type="wpImage_v1" maxOccurs="1"/>
+    <element name="image" type="wpImage_v1" maxOccurs="1"/>   
   </complexType>
 
   <complexType name="wpBlogTags" edittype="sheet" icon="table.png">
