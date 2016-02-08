@@ -328,8 +328,8 @@ and display the full pagination-->
               <xsl:when test="./image">
                 <xsl:call-template name="render-image-as-img">
                   <xsl:with-param name="src" select="./image/@src"/>
-                  <xsl:with-param name="width" select="767"/>
-                  <xsl:with-param name="height" select="1000"/>
+                  <xsl:with-param name="width" select="1550"/>
+                  <xsl:with-param name="height" select="2000"/>
                 </xsl:call-template>
               </xsl:when>
 
@@ -2649,8 +2649,8 @@ or else only the first n items will be sorted -->
                     <xsl:when test="./image">
                       <xsl:call-template name="render-image-as-img">
                         <xsl:with-param name="src" select="./image/@src"/>
-                        <xsl:with-param name="width" select="50"/>
-                        <xsl:with-param name="height" select="50"/>
+                        <xsl:with-param name="width" select="100"/>
+                        <xsl:with-param name="height" select="100"/>
                       </xsl:call-template>
                     </xsl:when>
             
