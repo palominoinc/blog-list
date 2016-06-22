@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<route controller="Bloglist\Controllers\BlogController@getBlogAsJSON" id="routC8wvmxU6sAWB" pattern="/about-us/blog" verb="post" webpalschematype="wpAppRoute"/>

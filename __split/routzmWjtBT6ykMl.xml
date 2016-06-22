@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<route id="routzmWjtBT6ykMl" pattern="/about-us/blog/year/{year}" verb="get" webpalschematype="wpAppRoute"/>
