@@ -94,7 +94,7 @@ or else only the first n items will be sorted -->
                <xsl:text>grid</xsl:text>
             </xsl:attribute>
             
-            <div class="grid-sizer col-sm-6"></div>
+<!--             <div class="grid-sizer col-sm-6"></div> -->
             
             <xsl:for-each select="exsl:node-set($subset)/blog">
               <xsl:apply-templates select="." mode="img"/>
