@@ -182,6 +182,7 @@ class BlogController extends Controller
       $blog_item['date']['day'] = $day;
       $blog_item['date']['month'] = $month;
       $blog_item['date']['year'] = $year;
+      $blog_item['author'] = $element->getAttribute("author");
       $blog_item['archived'] = $element->getAttribute("archived");
       array_push($result["blog"], $blog_item);
     }

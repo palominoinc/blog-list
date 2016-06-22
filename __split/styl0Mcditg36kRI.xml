@@ -479,6 +479,74 @@ and display the full pagination-->
         </xsl:attribute>
       </xsl:if>
     </xsl:element>
+    
+<!--  Link element is needed for social media websites to pull the image into the post    -->
+    <xsl:element name="link">
+      <xsl:attribute name="href">
+        <xsl:value-of select="concat('?f=', $src)"/>
+        <xsl:if test="$size">
+          <xsl:value-of select="concat('&amp;resize=', $size)"/>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:attribute name="rel">
+        <xsl:text>image_src</xsl:text>
+      </xsl:attribute>
+    </xsl:element>
+    
+  </xsl:template>
+  
+  <xsl:template name="imgLink">
+          <xsl:param name="src"/>
+    <xsl:param name="width" select="''"/>
+    <xsl:param name="height" select="''"/>
+    <xsl:param name="class" select="''"/>
+
+    <xsl:variable name="size">
+      <xsl:choose>
+        <xsl:when test="$width and not($width = '') and $height and not($height = '')">
+          <xsl:value-of select="$width"/>
+          <xsl:text>x</xsl:text>
+          <xsl:value-of select="$height"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    
+<!--  Link element is needed for social media websites to pull the image into the post    -->
+    <xsl:element name="link">
+      <xsl:attribute name="href">
+        <xsl:value-of select="concat('/_resources/', $src, '?_dm_id=', $src)"/>
+        <xsl:if test="$size">
+          <xsl:value-of select="concat('&amp;resize=', $size)"/>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:attribute name="rel">
+        <xsl:text>image_src</xsl:text>
+      </xsl:attribute>
+    </xsl:element>
+    
+   
+ 
+  </xsl:template>
+  
+  <xsl:template name="meta-og-image">
+    <xsl:param name="src"/>
+    <xsl:param name="width" select="''"/>
+    <xsl:param name="height" select="''"/>
+    <xsl:param name="class" select="''"/>
+    
+     <xsl:element name="meta">
+      <xsl:attribute name="property">
+         <xsl:text>og:image</xsl:text>
+      </xsl:attribute>
+      
+      <xsl:attribute name="content">
+        <xsl:value-of select="concat('/_resources/', $src, '?_dm_id=', $src)"/>
+        <xsl:if test="$size">
+          <xsl:value-of select="concat('&amp;resize=', $size)"/>
+        </xsl:if>
+      </xsl:attribute>
+    </xsl:element>
+    
   </xsl:template>
   
   <xsl:template name="include-bloglist-js">
@@ -1946,6 +2014,39 @@ details
             
           </xsl:apply-templates>
           
+          <xsl:if test="$blog/image">
+             <xsl:call-template name="imgLink">
+                <xsl:with-param name="src" select="$blog/image/@src"/>
+                <xsl:with-param name="width" select="500"/>
+                <xsl:with-param name="height" select="500"/>
+             </xsl:call-template>
+            
+<!--         <xsl:variable name="metaStringVar">
+              <xsl:text>'</xsl:text>
+              <xsl:call-template name="meta-og-image">
+                <xsl:with-param name="src" select="$blog/image/@src"/>
+                <xsl:with-param name="width" select="500"/>
+                <xsl:with-param name="height" select="500"/>
+              </xsl:call-template>
+              <xsl:text>'</xsl:text>
+            </xsl:variable>
+             -->
+<!--             <script type="text/javascript" src="/resources/Bloglist/js/metaTag.js"/> -->
+<!--             <script type="text/javascript"> -->
+              
+<!--                $(window).load(function() { -->
+<!--                   var source = '<xsl:value-of select="$blog/image/@src"/>'; -->
+                 
+<!--                   setMetaImg(source); -->
+              
+                 
+<!--               });  -->
+            
+<!--             </script> -->
+             
+            
+          </xsl:if>
+          
           <xsl:variable name="blogPath">
             <xsl:value-of select="$PATH"/>
             <xsl:text>?node=</xsl:text>
@@ -2841,15 +2942,22 @@ or else only the first n items will be sorted -->
               </xsl:call-template>
             </xsl:variable>
             
-            <i class="fa fa-calendar" style="padding-right: 5px; margin-bottom:10px;"></i><xsl:value-of select="$formatted-date"/>
-            
-      
-            <!-- author here -->
-            <xsl:if test="./@author != ''">
-              <xsl:text> | </xsl:text>
-              <i class="fa fa-user" style="padding-right: 5px; margin-bottom:10px;"></i>
-              <xsl:value-of select="./@author"/>
-            </xsl:if>
+            <div class="date-row">
+              <i class="fa fa-calendar" style="padding-right: 5px; margin-bottom:10px;"></i>
+              
+              <span id="date"><xsl:value-of select="$formatted-date"/></span>
+
+
+              <!-- author here -->
+              <xsl:if test="./@author != ''">
+                 <span><xsl:text> | </xsl:text></span>
+                <i class="fa fa-user" style="padding-right: 5px; margin-bottom:10px;"></i>
+                <span id="author">
+                    <xsl:value-of select="./@author"/>
+                </span>
+              </xsl:if>
+
+            </div>
       
             <xsl:element name="div">
               <xsl:attribute name="class">

@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  
   //Add the event listener to the newslist
   //and add it to the sidebar
   var bloglist,
@@ -209,19 +210,33 @@ function updateBlog(newBlog) {
       summary_text,
       read_more,
       read_more_link,
-      container;
+      container,
+      grid,
+      gridSizer,
+      gridItem,
+      gridContent,
+      col12,
+      metaDate;
   if (blog.length > 0) {
     container = $("div[data-bloglist-id='" + newBlog.id + "']");
     container.html(""); 
+    grid = jel("div").addClass("grid").appendTo(container);
+    gridSizer = jel("div").addClass("grid-sizer col-sm-6").appendTo(grid);
   }
   console.log(blog);
   for (var i = 0; i < blog.length; i++) {
     //if (i > 9) {console.log("whwhwhww");return;}
     var blogItem = blog[i];
     //For each article
-    article = jel("article").addClass("blogPost");
     
-    header = jel("div").addClass("blogheader").appendTo(article);
+    gridItem = jel("div").addClass("grid-item col-sm-6");
+    gridContent = jel("div").addClass("grid-item-content col-sm-12").appendTo(gridItem);
+    article = jel("article").addClass("blogPost").appendTo(gridContent);
+    
+    figure = jel("figure").addClass("blog-image row").appendTo(article);
+    
+    col12 = jel("div").addClass("col-sm-12").appendTo(article);
+    header = jel("div").addClass("blogheader").appendTo(col12);
 
     title = jel("h2").appendTo(header);
     titleLink = jel("a").attr("href", window.location.pathname + "?node=" + blogItem.name)
@@ -229,9 +244,24 @@ function updateBlog(newBlog) {
     .appendTo(title);
 
     meta = jel("div").addClass("meta-line clearfix").appendTo(header);
+    
+    metaDate = jel("div").addClass("date-row")
+    .appendTo(meta);
+    
+    dateI = jel("i").addClass("fa fa-calendar").attr("style", "padding-right: 5px; margin-bottom:10px;")
+    .appendTo(metaDate);
+    
+    jel("span").text(blogItem.date.day + " " + blogItem.date.month + " " + blogItem.date.year + " | ").appendTo(metaDate);
+    
+    userI = jel("i").addClass("fa fa-user").attr("style", "padding-right: 5px; margin-bottom:10px;")
+    .appendTo(metaDate);
+    
+    jel("span").text(blogItem.author).appendTo(metaDate);
+
 
     metaLeft = jel("div").addClass("row category-row")
     .appendTo(meta);
+    
     categorySpan = jel("span").addClass("meta-category")
     .text("In:")
     .appendTo(metaLeft);
@@ -297,30 +327,33 @@ function updateBlog(newBlog) {
       emptyTagText = jel("i").text("None").appendTo(tagList);
     }
     
-
-    entry_content = jel("div").addClass("entry-content").appendTo(article);
+    
+    
+    entry_content = jel("div").addClass("entry-content").appendTo(col12);
 
     entry_row = jel("div").addClass("row").appendTo(entry_content);
 
-    image_container = jel("div").addClass("col-md-5").appendTo(entry_row);
-    figure = jel("figure").addClass("blog-image").appendTo(image_container);
+//     image_container = jel("div").addClass("col-md-5").appendTo(entry_row);
+//     figure = jel("figure").addClass("blog-image row").appendTo(image_container);
+    
     image_link = jel("a").attr("href", window.location.pathname + "?node=" + blogItem.name).appendTo(figure);
-    blogDateInfo = jel("div").addClass("blog-date-info").appendTo(image_link);
-    blogMonth = jel("span").addClass("blog-month").text(blogItem.date.month).appendTo(blogDateInfo);
-    blogDay = jel("span").addClass("blog-day").text(blogItem.date.day).appendTo(blogDateInfo);
-    blogYear = jel("span").addClass("blog-year").text(blogItem.date.year).appendTo(blogDateInfo);
+//     blogDateInfo = jel("div").addClass("blog-date-info").appendTo(image_link);
+//     blogMonth = jel("span").addClass("blog-month").text(blogItem.date.month).appendTo(blogDateInfo);
+//     blogDay = jel("span").addClass("blog-day").text(blogItem.date.day).appendTo(blogDateInfo);
+//     blogYear = jel("span").addClass("blog-year").text(blogItem.date.year).appendTo(blogDateInfo);
     image = jel("img")
             .attr("src", window.location.pathname + blogItem.imageSrc)
             .attr("class", "img-responsive")
             .appendTo(image_link);
 
-    summary_container = jel("div").addClass("col-md-7").appendTo(entry_row);
+//     summary_container = jel("div").addClass("col-md-7").appendTo(entry_row);
+    summary_container = jel("div").addClass("col-sm-12").appendTo(entry_row);
     blog_summary = jel("div").addClass("blog-summary").appendTo(summary_container);
     summary_text = jel("p").text(blogItem.synopsis).appendTo(blog_summary);
     read_more = jel("p").addClass("read-more").appendTo(blog_summary);
     read_more_link = jel("a").attr("href", window.location.pathname + "?node=" + blogItem.name).text("Read More").appendTo(read_more);
     
-    container.append(article);
+    grid.append(gridItem);
   }
   //TODO: Add pagination
   pagination = jel("div").addClass("pagination").appendTo(container);
@@ -372,6 +405,28 @@ function updateBlog(newBlog) {
                     .text(container.data("filter-type") + ": " + container.data("filter-value"))
                     .appendTo(removeFilterButton);
   }
+   
+     $grid = $('.grid');
+     triggerMasonry();
+
+
+   // trigger masonry when images have loaded
+     $('.grid').imagesLoaded().done( function() {
+      triggerMasonry();
+    }); 
   
   window.scrollTo(0,400);
+}
+ 
+function triggerMasonry() {
+  // don't proceed if $grid has not been selected
+  if ( !$grid ) {
+    return;
+  }
+  // init Masonry
+  $('.grid').masonry({
+    itemSelector: '.grid-item', // use a separate class for itemSelector, other than .col-
+    columnWidth: '.grid-sizer',
+    percentPosition: true
+  });
 }
