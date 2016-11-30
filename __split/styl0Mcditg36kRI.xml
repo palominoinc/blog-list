@@ -22,7 +22,7 @@ Illegal reproduction and disclosure will be prosecuted  -->
   <!-- ========================================================================================= -->
   <xsl:template match="bloglist" mode="homewidget">
 
-    <xsl:for-each select="./blog">   
+    <xsl:for-each select="./blog[not(@archived) or @archived != 'yes']">
       
       <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
       
@@ -467,9 +467,9 @@ and display the full pagination-->
 
     <xsl:element name="img">
       <xsl:attribute name="src">
-        <xsl:value-of select="concat('?f=', $src)"/>
+        <xsl:value-of select="concat('/resource/dm/', $src)"/>
         <xsl:if test="$size">
-          <xsl:value-of select="concat('&amp;resize=', $size)"/>
+          <xsl:value-of select="concat('/resize=', $size)"/>
         </xsl:if>
       </xsl:attribute>
       
@@ -483,9 +483,9 @@ and display the full pagination-->
 <!--  Link element is needed for social media websites to pull the image into the post    -->
     <xsl:element name="link">
       <xsl:attribute name="href">
-        <xsl:value-of select="concat('?f=', $src)"/>
+        <xsl:value-of select="concat('/resource/dm/', $src)"/>
         <xsl:if test="$size">
-          <xsl:value-of select="concat('&amp;resize=', $size)"/>
+          <xsl:value-of select="concat('/resize=', $size)"/>
         </xsl:if>
       </xsl:attribute>
       <xsl:attribute name="rel">
