@@ -341,8 +341,12 @@ function updateBlog(newBlog) {
 //     blogMonth = jel("span").addClass("blog-month").text(blogItem.date.month).appendTo(blogDateInfo);
 //     blogDay = jel("span").addClass("blog-day").text(blogItem.date.day).appendTo(blogDateInfo);
 //     blogYear = jel("span").addClass("blog-year").text(blogItem.date.year).appendTo(blogDateInfo);
+    var image_src = blogItem.imageSrc;
+    image_src = image_src.replace("?f=", "");
+    image_src = image_src.replace("&", "/");
     image = jel("img")
-            .attr("src", window.location.pathname + blogItem.imageSrc)
+            // .attr("src", window.location.pathname + blogItem.imageSrc)
+            .attr("src", '/resource/dm/' + image_src)
             .attr("class", "img-responsive")
             .appendTo(image_link);
 

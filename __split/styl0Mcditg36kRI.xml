@@ -12,7 +12,7 @@ Illegal reproduction and disclosure will be prosecuted  -->
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wp="http://www.palominosys.com/wp"
                 xmlns:php="http://php.net/xsl"
-                xmlns:date="http://exslt.org/dates-and-times" 
+                xmlns:date="http://exslt.org/dates-and-times"
                 xmlns:exsl="http://exslt.org/common"
                 extension-element-prefixes="exsl"
                 >
@@ -23,14 +23,14 @@ Illegal reproduction and disclosure will be prosecuted  -->
   <xsl:template match="bloglist" mode="homewidget">
 
     <xsl:for-each select="./blog[not(@archived) or @archived != 'yes']">
-      
+
       <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
-      
+
       <xsl:variable name="blog-link">
         <xsl:text>/about-us/blog?node=</xsl:text>
         <xsl:value-of select="./@name" />
       </xsl:variable>
-      
+
       <xsl:if test="position() &lt; 3">
         <h3><a href="{$blog-link}"><xsl:value-of select="title"/></a></h3>
         <xsl:choose>
@@ -44,7 +44,7 @@ Illegal reproduction and disclosure will be prosecuted  -->
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
-  
+
   <xsl:template match="bloglist">
 
     <xsl:variable name="max-items">
@@ -77,9 +77,9 @@ or else only the first n items will be sorted -->
     <!-- and determine how many pages we will need for them -->
     <xsl:variable name="num-pages">
       <xsl:value-of select="ceiling($num-items div $items-per-page)"/>
-    </xsl:variable> 
+    </xsl:variable>
 
-    
+
     <!-- START output the bloglist -->
 
     <div class="row">
@@ -88,19 +88,19 @@ or else only the first n items will be sorted -->
           <xsl:attribute name="data-bloglist-id">
             <xsl:value-of select="./@id"/>
           </xsl:attribute>
-          
+
           <xsl:element name="div">
             <xsl:attribute name="class">
                <xsl:text>grid</xsl:text>
             </xsl:attribute>
-            
+
             <div class="grid-sizer col-sm-6"></div>
-            
+
             <xsl:for-each select="exsl:node-set($subset)/blog">
               <xsl:apply-templates select="." mode="img"/>
             </xsl:for-each>
           </xsl:element>
-          
+
           <xsl:element name="div">
             <xsl:attribute name="class">
               <xsl:text>pagination col-sm-12</xsl:text>
@@ -149,18 +149,18 @@ and display the full pagination-->
           </xsl:element>
         </xsl:element>
       </div>
-      
+
 <!--=================sidebar==================-->
       <div class="col-md-3 blog-sidebar" style="padding-top: 55px;">
-        
+
         <xsl:call-template name="blog-sidebar">
 
         </xsl:call-template>
-        
+
       </div>
 <!-- =============== /sidebar =================     -->
-      
-      
+
+
     </div>
 <!--  /row    -->
 
@@ -172,7 +172,7 @@ and display the full pagination-->
 <!--       <script type="text/javascript">
        $(document).ready(function(){
           $('.grid').masonry({
-          
+
           itemSelector: '.grid-item',
           columnWidth: 200
         });
@@ -197,8 +197,8 @@ and display the full pagination-->
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
-  
+
+
   <xsl:template match="blog/text" mode="placeholder">
     <!-- Get the transformed XML -->
     <!--     <xsl:variable name="transformed-data">
@@ -210,10 +210,10 @@ and display the full pagination-->
 </xsl:call-template>
 </xsl:variable>
 <xsl:copy-of select="$converted-data"/> -->
-    
+
     <xsl:apply-templates select="./*" mode="placeholder"/>
   </xsl:template>
-  
+
   <xsl:template name="html-with-placeholder-img">
     <xsl:param name="data"/>
     <xsl:for-each select="exsl:node-set($data)/text/*">
@@ -231,11 +231,11 @@ and display the full pagination-->
 
   <xsl:template match="blog" mode="img">
     <xsl:variable name="blog-link">
-      <xsl:value-of select="$PATH"/>
+      <xsl:text>blog</xsl:text>
       <xsl:text>?node=</xsl:text>
       <xsl:value-of select="./@name"/>
     </xsl:variable>
-    
+
     <xsl:variable name="blog-text">
       <!--         <xsl:apply-templates select="./text"/> -->
       <xsl:variable name="text">
@@ -251,24 +251,24 @@ and display the full pagination-->
     <xsl:variable name="blog-summary">
       <xsl:value-of select="concat(substring($blog-text, 0, 300), '...')"/>
     </xsl:variable>
-    
+
     <xsl:element name="div">
         <xsl:attribute name="class">
           <xsl:text>grid-item col-sm-6</xsl:text>
         </xsl:attribute>
-      
+
        <xsl:element name="div">
         <xsl:attribute name="class">
           <xsl:text>grid-item-content col-sm-12</xsl:text>
-        </xsl:attribute>    
-    
+        </xsl:attribute>
+
         <xsl:element name="article">
           <xsl:attribute name="class">
             <xsl:text>blogPost </xsl:text>
-          </xsl:attribute> 
-      
-       
-      
+          </xsl:attribute>
+
+
+
 
         <!--START figure.blog-image-->
         <xsl:element name="figure">
@@ -344,19 +344,19 @@ and display the full pagination-->
           </xsl:element>
         </xsl:element>
         <!--END figure.blog-image-->
-    
+
         <!--START .col-sm-12-->
         <xsl:element name="div">
         <xsl:attribute name="class">
           <xsl:text>col-sm-12</xsl:text>
         </xsl:attribute>
-     
+
         <!--START header-->
         <xsl:element name="div">
           <xsl:attribute name="class">
             <xsl:text>blogheader</xsl:text>
           </xsl:attribute>
-          
+
           <!--title-->
           <xsl:element name="h2">
             <xsl:element name="a">
@@ -366,59 +366,59 @@ and display the full pagination-->
               <xsl:value-of select="./title"/>
             </xsl:element>
           </xsl:element>
-          
-          
-            
-            
-         
-          
+
+
+
+
+
+
           <xsl:call-template name="meta-line"/>
-              
+
         </xsl:element>
-        
+
         <!--END header-->
         <!--START .entry-content-->
         <xsl:element name="div">
-          
+
           <xsl:attribute name="class">
             <xsl:text>entry-content</xsl:text>
           </xsl:attribute>
-          
+
           <!--START .row-->
           <xsl:element name="div">
             <xsl:attribute name="class">
               <xsl:text>row</xsl:text>
             </xsl:attribute>
-            
-            
-            
+
+
+
             <!--START .row-->
             <xsl:element name="div">
               <xsl:attribute name="class">
                 <xsl:text>col-sm-12</xsl:text>
               </xsl:attribute>
-              
+
               <xsl:element name="div">
                 <xsl:attribute name="class">
                   <xsl:text>blog-summary</xsl:text>
                 </xsl:attribute>
-                
+
                 <!--summary-->
                 <xsl:element name="p">
                   <xsl:value-of select="$blog-summary"/>
                 </xsl:element>
-                
+
                 <!--read more-->
                 <xsl:element name="p">
                   <xsl:attribute name="class">
                     <xsl:text>read-more</xsl:text>
                   </xsl:attribute>
-                  
+
                   <xsl:element name="a">
                     <xsl:attribute name="href">
                       <xsl:value-of select="$blog-link"/>
                     </xsl:attribute>
-                    
+
                     <xsl:text>Read More</xsl:text>
                   </xsl:element>
                 </xsl:element>
@@ -426,11 +426,11 @@ and display the full pagination-->
             </xsl:element>
             <!--END .row-->
           </xsl:element>
-           
-      
-        
+
+
+
           <!--START .col-sm-12-->
-          
+
           <xsl:element name="div">
             <xsl:attribute name="class">
               <xsl:text>col-sm-12</xsl:text>
@@ -438,15 +438,15 @@ and display the full pagination-->
             <!--           <xsl:apply-templates select="./text" mode="placeholder"/> -->
           </xsl:element>
           <!--END .row-->
-          
+
          </xsl:element><!--END .entry-content-->
         </xsl:element><!--END .col-sm-12-->
-        
+
       </xsl:element><!--END .article-->
-      
+
       </xsl:element><!--END grid-item-content-->
     </xsl:element>
-    
+
   </xsl:template>
 
   <xsl:template name="render-image-as-img">
@@ -472,14 +472,14 @@ and display the full pagination-->
           <xsl:value-of select="concat('/resize=', $size)"/>
         </xsl:if>
       </xsl:attribute>
-      
+
       <xsl:if test="$class and $class != ''">
         <xsl:attribute name="class">
           <xsl:value-of select="$class"/>
         </xsl:attribute>
       </xsl:if>
     </xsl:element>
-    
+
 <!--  Link element is needed for social media websites to pull the image into the post    -->
     <xsl:element name="link">
       <xsl:attribute name="href">
@@ -492,9 +492,9 @@ and display the full pagination-->
         <xsl:text>image_src</xsl:text>
       </xsl:attribute>
     </xsl:element>
-    
+
   </xsl:template>
-  
+
   <xsl:template name="imgLink">
           <xsl:param name="src"/>
     <xsl:param name="width" select="''"/>
@@ -510,7 +510,7 @@ and display the full pagination-->
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
-    
+
 <!--  Link element is needed for social media websites to pull the image into the post    -->
     <xsl:element name="link">
       <xsl:attribute name="href">
@@ -523,22 +523,22 @@ and display the full pagination-->
         <xsl:text>image_src</xsl:text>
       </xsl:attribute>
     </xsl:element>
-    
-   
- 
+
+
+
   </xsl:template>
-  
+
   <xsl:template name="meta-og-image">
     <xsl:param name="src"/>
     <xsl:param name="width" select="''"/>
     <xsl:param name="height" select="''"/>
     <xsl:param name="class" select="''"/>
-    
+
      <xsl:element name="meta">
       <xsl:attribute name="property">
          <xsl:text>og:image</xsl:text>
       </xsl:attribute>
-      
+
       <xsl:attribute name="content">
         <xsl:value-of select="concat('/_resources/', $src, '?_dm_id=', $src)"/>
         <xsl:if test="$size">
@@ -546,20 +546,19 @@ and display the full pagination-->
         </xsl:if>
       </xsl:attribute>
     </xsl:element>
-    
+
   </xsl:template>
-  
+
   <xsl:template name="include-bloglist-js">
 <!--      <script type="text/javascript" src="?f=extensions/design-templates/DesignTemplates/Resources/plugins/jquery-1.11.3.min.js"></script> -->
     <!--   imagesloaded plugin   -->
 <!--     <script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script> -->
-    
-    <script src="/resources/Bloglist/js/bloglist.js"></script>
+    <script src="/resource/ext/Bloglist/js/bloglist.js"></script>
 <!--     <script src="/resources/Bloglist/js/masonry.pkgd.min.js"></script> -->
 <!--     <script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script> -->
-    
+
          <!--   imagesloaded plugin   -->
-   
+
   </xsl:template>
 
   <!-- output a list of years with articles and the amount of articles in that year -->
@@ -590,57 +589,57 @@ to use '.' to access it directly. -->
       <xsl:variable name="unique-years">
         <xsl:for-each select="exsl:node-set($all-years)/year[not(. = preceding-sibling::year)]">
           <xsl:variable name="this-year" select="."/>
-          
+
           <xsl:element name="year">
             <xsl:attribute name="count">
               <xsl:value-of select="count(exsl:node-set($all-years)/year[text() = $this-year/text()])"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="."/>
           </xsl:element>
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!--output the list-->
       <ul class="blog-by-year">
-        <xsl:for-each select="exsl:node-set($unique-years)/year">  
+        <xsl:for-each select="exsl:node-set($unique-years)/year">
           <xsl:sort select="." order="descending"/>
-          
+
           <li>
             <xsl:element name="a">
-              
+
               <xsl:attribute name="href">
-                <!--                   <xsl:value-of select="$PATH"/> -->
+                <!--                   <xsl:text>blog</xsl:text> -->
                 <xsl:text>#year=</xsl:text>
                 <xsl:value-of select="."/>
               </xsl:attribute>
-              
+
               <xsl:attribute name="data-filter-type">
                 <xsl:text>year</xsl:text>
               </xsl:attribute>
-              
+
               <xsl:attribute name="data-filter-value">
                 <xsl:value-of select="."/>
               </xsl:attribute>
-              
+
               <xsl:value-of select="."/>
-              
+
               <span class="count">
                 <xsl:value-of select="'('"/>
                 <xsl:value-of select="./@count"/>
                 <xsl:value-of select="')'"/>
               </span>
-              
-            </xsl:element>       
+
+            </xsl:element>
           </li>
-          
+
         </xsl:for-each>
       </ul>
-      
+
     </xsl:for-each>
   </xsl:template>
-  
-  
+
+
   <xsl:template name="output-year-list-from-blog-node" mode="meta">
     <xsl:param name="bloglist"/>
     <!-- This is kinda hacky. Not actually using a for loop here.
@@ -648,80 +647,80 @@ Since <xsl:call-template> does not change our context,
 we "force" a context change by passing the bloglist in as
 a param and then calling <xsl:for-each> on it. This allows us
 to use '.' to access it directly. -->
-    
+
     <xsl:for-each select="exsl:node-set($bloglist)">
       <!-- We grab all years... -->
       <xsl:variable name="all-years">
         <xsl:for-each select="./blog[not(@archived) or @archived != 'yes']">
           <xsl:sort select="substring(./@date,7)" order="descending"/>
-          
+
           <xsl:element name="year">
             <xsl:call-template name="format-date-blog">
               <xsl:with-param name="format" select="'YYYY'"/>
               <xsl:with-param name="date" select="./@date"/>
             </xsl:call-template>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!-- And filter out the unique ones, and count them... -->
       <xsl:variable name="unique-years">
         <xsl:for-each select="exsl:node-set($all-years)/year[not(. = preceding-sibling::year)]">
-          
+
           <xsl:variable name="this-year" select="."/>
-          
+
           <xsl:element name="year">
             <xsl:attribute name="count">
               <xsl:value-of select="count(exsl:node-set($all-years)/year[text() = $this-year/text()])"/>
             </xsl:attribute>
             <xsl:value-of select="."/>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!--output the list-->
       <ul class="blog-by-year">
         <xsl:for-each select="exsl:node-set($unique-years)/year">
-          
+
           <xsl:sort select="." order="descending"/>
-          
+
           <li>
             <xsl:element name="a">
-              
+
               <xsl:attribute name="href">
-                <xsl:value-of select="$PATH"/>
+                <xsl:text>blog</xsl:text>
                 <xsl:text>#year=</xsl:text>
                 <xsl:value-of select="."/>
               </xsl:attribute>
-              
+
               <xsl:attribute name="data-filter-type">
                 <xsl:text>year</xsl:text>
               </xsl:attribute>
-              
+
               <xsl:attribute name="data-filter-value">
                 <xsl:value-of select="."/>
               </xsl:attribute>
-              
+
               <xsl:value-of select="."/>
-              
+
               <span class="count">
                 <xsl:value-of select="'('"/>
                 <xsl:value-of select="./@count"/>
                 <xsl:value-of select="')'"/>
               </span>
-              
-            </xsl:element>   
+
+            </xsl:element>
           </li>
-          
+
         </xsl:for-each>
       </ul>
-      
+
     </xsl:for-each>
   </xsl:template>
-  
-  
+
+
   <xsl:template name="output-tag-list" mode="meta">
     <xsl:param name="bloglist"/>
     <!-- This is kinda hacky. Not actually using a for loop here.
@@ -733,72 +732,72 @@ to use '.' to access it directly. -->
       <!-- We grab all years... -->
       <xsl:variable name="all-tags">
         <xsl:for-each select="./blog[not(@archived) or @archived != 'yes']/tags/tag">
-          
+
           <xsl:element name="tag">
-            
+
             <xsl:attribute name="value">
               <xsl:value-of select="translate(./text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="."/>
-            
+
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!-- And filter out the unique ones, and count them... -->
       <xsl:variable name="unique-tags">
         <xsl:for-each select="exsl:node-set($all-tags)/tag[not(./@value = preceding-sibling::tag/@value)]">
           <xsl:variable name="this-tag" select="."/>
-          
+
           <xsl:element name="tag">
             <xsl:attribute name="count">
               <xsl:value-of select="count(exsl:node-set($all-tags)/tag[./@value = $this-tag/@value])"/>
             </xsl:attribute>
             <xsl:value-of select="."/>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!--output the list-->
       <ul class="blog-by-tag">
         <xsl:for-each select="exsl:node-set($unique-tags)/tag">
           <xsl:if test="./text()">
-            
+
             <li>
               <i class="fa fa-tags"></i>
               <xsl:element name="a">
-                
-                
+
+
                 <xsl:attribute name="href">
-                  <!--                   <xsl:value-of select="$PATH"/> -->
+                  <!--                   <xsl:text>blog</xsl:text> -->
                   <xsl:text>#tag=</xsl:text>
                   <xsl:value-of select="."/>
                 </xsl:attribute>
-                
+
                 <xsl:attribute name="data-filter-type">
                   <xsl:text>tag</xsl:text>
                 </xsl:attribute>
-                
+
                 <xsl:attribute name="data-filter-value">
                   <xsl:value-of select="."/>
                 </xsl:attribute>
-                
+
                 <xsl:value-of select="."/>
-                
-                
+
+
               </xsl:element>
             </li>
-            
+
           </xsl:if>
         </xsl:for-each>
       </ul>
     </xsl:for-each>
   </xsl:template>
-  
-  
+
+
   <xsl:template name="output-tag-list-from-blog-node" mode="meta">
     <xsl:param name="bloglist"/>
     <!-- This is kinda hacky. Not actually using a for loop here.
@@ -810,59 +809,59 @@ to use '.' to access it directly. -->
       <!-- We grab all years... -->
       <xsl:variable name="all-tags">
         <xsl:for-each select="./blog/tags/tag">
-          
+
           <xsl:element name="tag">
             <xsl:attribute name="value">
               <xsl:value-of select="translate(./text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="."/>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!-- And filter out the unique ones, and count them... -->
       <xsl:variable name="unique-tags">
         <xsl:for-each select="exsl:node-set($all-tags)/tag[not(./@value = preceding-sibling::tag/@value)]">
           <xsl:variable name="this-tag" select="."/>
-          
+
           <xsl:element name="tag">
             <xsl:attribute name="count">
               <xsl:value-of select="count(exsl:node-set($all-tags)/tag[./@value = $this-tag/@value])"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="."/>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!--output the list-->
       <ul class="blog-by-tag">
         <xsl:for-each select="exsl:node-set($unique-tags)/tag">
           <xsl:if test="./text()">
-            
+
             <li>
               <i class="fa fa-tags"></i>
               <xsl:element name="a">
-                
+
                 <xsl:attribute name="href">
-                  <xsl:value-of select="$PATH"/>
+                  <xsl:text>blog</xsl:text>
                   <xsl:text>#tag=</xsl:text>
                   <xsl:value-of select="."/>
                 </xsl:attribute>
-                
+
                 <xsl:attribute name="data-filter-type">
                   <xsl:text>tag</xsl:text>
                 </xsl:attribute>
-                
+
                 <xsl:attribute name="data-filter-value">
                   <xsl:value-of select="."/>
                 </xsl:attribute>
-                
+
                 <xsl:value-of select="."/>
-                
+
 <!--                 <span class="count">
                   <xsl:value-of select="'('"/>
                   <xsl:value-of select="./@count"/>
@@ -870,14 +869,14 @@ to use '.' to access it directly. -->
                 </span> -->
               </xsl:element>
             </li>
-            
+
           </xsl:if>
         </xsl:for-each>
       </ul>
     </xsl:for-each>
   </xsl:template>
-  
-  
+
+
   <xsl:template name="output-category-list" mode="meta">
 
     <xsl:param name="bloglist"/>
@@ -888,42 +887,42 @@ a param and then calling <xsl:for-each> on it. This allows us
 to use '.' to access it directly. -->
     <xsl:for-each select="exsl:node-set($bloglist)">
       <!-- we define $uppercase and $lowercase variables for our hack
-to convert strings to lowercase 
+to convert strings to lowercase
 example call to convert a string to lowercase (within a select statement:
 translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
-      
+
       <xsl:variable name="uppercase" value="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
-      
+
       <xsl:variable name="lowercase" value="'abcdefghijklmnopqrstuvwxyz'"/>
-      
+
       <xsl:variable name="lowercase-duplicate-main-categories-with-duplicate-sub-categories">
         <xsl:for-each select="./blog[not(@archived) or @archived !='yes']/categories">
           <xsl:choose>
             <xsl:when test="./main-category and ./category">
-              
+
               <!--main-category with sub-categories -->
               <xsl:element name="main-category">
                 <xsl:variable name="main-category-value" select="./main-category/text()"/>
                 <xsl:attribute name="value">
                   <xsl:value-of select="translate($main-category-value,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
                 </xsl:attribute>
-                
+
                 <xsl:value-of select="./main-category"/>
-                
+
                 <xsl:for-each select="./category">
                   <xsl:element name="category">
                     <xsl:attribute name="value">
                       <xsl:value-of select="translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
                     </xsl:attribute>
-                    
+
                     <xsl:value-of select="."/>
                   </xsl:element>
-                  
+
                 </xsl:for-each>
               </xsl:element>
-              
+
             </xsl:when>
-            
+
             <xsl:when test="./main-category">
               <!--main-category with no sub-categories -->
               <xsl:element name="main-category">
@@ -933,7 +932,7 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
                 <xsl:value-of select="./main-category"/>
               </xsl:element>
             </xsl:when>
-            
+
             <xsl:otherwise>
               <!-- pull in category and give it a value attribute -->
               <xsl:for-each select="./category">
@@ -941,10 +940,10 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
                   <xsl:attribute name="value">
                     <xsl:value-of select="translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
                   </xsl:attribute>
-                  
+
                   <xsl:value-of select="."/>
                 </xsl:element>
-                
+
               </xsl:for-each>
             </xsl:otherwise>
           </xsl:choose>
@@ -960,19 +959,19 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
       <xsl:variable name="lowercase-unique-counted-main-categories">
         <xsl:for-each select="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[not(./@value = preceding-sibling::main-category/@value)]">
           <xsl:variable name="this-main-category" select="."/>
-          
+
           <xsl:element name="main-category">
             <xsl:attribute name="value">
               <xsl:value-of select="./@value"/>
             </xsl:attribute>
-            
+
             <xsl:attribute name="count">
               <xsl:value-of select="count(exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[./@value = $this-main-category/@value])"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="./text()"/>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
 
@@ -985,54 +984,54 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
       <xsl:variable name="lowercase-unique-counted-categories">
         <xsl:for-each select="exsl:node-set($lowercase-duplicate-categories)//category[not(./@value = preceding-sibling::category/@value)]">
           <xsl:variable name="this-category" select="."/>
-          
+
           <xsl:element name="category">
             <xsl:attribute name="value">
               <xsl:value-of select="./@value"/>
             </xsl:attribute>
-            
+
             <xsl:attribute name="count">
               <xsl:value-of select="count(exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)//category[./@value = $this-category/@value])"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="./text()"/>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
 
       <xsl:variable name="lowercase-unique-counted-main-categories-with-unique-sub-categories">
         <xsl:for-each select="exsl:node-set($lowercase-unique-counted-main-categories)/main-category">
           <xsl:variable name="this-main-category" select="."/>
-          
+
           <xsl:element name="main-category">
             <xsl:attribute name="value">
               <xsl:value-of select="./@value"/>
             </xsl:attribute>
-            
+
             <xsl:attribute name="count">
               <xsl:value-of select="./@count"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="."/>
-            
+
             <xsl:for-each select="exsl:node-set($lowercase-unique-counted-categories)/category">
               <xsl:variable name="this-category" select="."/>
-              
+
               <xsl:if test="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[./@value = $this-main-category/@value]/category[./@value = $this-category/@value]">
-                
+
                 <xsl:element name="category">
                   <xsl:attribute name="value">
                     <xsl:value-of select="$this-category/@value"/>
                   </xsl:attribute>
-                  
+
                   <xsl:attribute name="count">
                     <xsl:value-of select="$this-category/@count"/>
                   </xsl:attribute>
-                  
+
                   <xsl:value-of select="$this-category"/>
                 </xsl:element>
-                
+
               </xsl:if>
             </xsl:for-each>
           </xsl:element>
@@ -1045,18 +1044,18 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
           <xsl:copy-of select="exsl:node-set($lowercase-unique-counted-categories)/category[./@value = $this-category/@value]"/>
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!--output the list-->
       <ul class="blog-by-category">
         <xsl:for-each select="exsl:node-set($lowercase-unique-counted-main-categories-with-unique-sub-categories)/main-category">
           <xsl:if test="./text()">
             <li>
               <xsl:call-template name="category-list-link"/>
-              
+
               <xsl:if test="./category">
                 <ul>
                   <xsl:for-each select="./category">
-                    <li>                       
+                    <li>
                       <xsl:call-template name="category-list-link"/>
                     </li>
                   </xsl:for-each>
@@ -1076,8 +1075,8 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
       </ul>
     </xsl:for-each>
   </xsl:template>
-  
-  
+
+
   <xsl:template name="output-category-list-from-blog-node" mode="meta">
 
     <xsl:param name="bloglist"/>
@@ -1088,7 +1087,7 @@ a param and then calling <xsl:for-each> on it. This allows us
 to use '.' to access it directly. -->
     <xsl:for-each select="exsl:node-set($bloglist)">
       <!-- we define $uppercase and $lowercase variables for our hack
-to convert strings to lowercase 
+to convert strings to lowercase
 example call to convert a string to lowercase (within a select statement:
 translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
       <xsl:variable name="uppercase" value="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
@@ -1098,7 +1097,7 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
           <xsl:choose>
             <xsl:when test="./main-category and ./category">
               <!--main-category with sub-categories -->
-              
+
               <xsl:element name="main-category">
                 <xsl:variable name="main-category-value" select="./main-category/text()"/>
                 <xsl:attribute name="value">
@@ -1106,7 +1105,7 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
                 </xsl:attribute>
                 <xsl:value-of select="./main-category"/>
                 <xsl:for-each select="./category">
-                  
+
                   <xsl:element name="category">
                     <xsl:attribute name="value">
                       <xsl:value-of select="translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
@@ -1115,11 +1114,11 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
                   </xsl:element>
                 </xsl:for-each>
               </xsl:element>
-              
+
             </xsl:when>
-            
+
             <xsl:when test="./main-category">
-              
+
               <!--main-category with no sub-categories -->
               <xsl:element name="main-category">
                 <xsl:attribute name="value">
@@ -1127,20 +1126,20 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
                 </xsl:attribute>
                 <xsl:value-of select="./main-category"/>
               </xsl:element>
-              
+
             </xsl:when>
-            
+
             <xsl:otherwise>
               <!-- pull in category and give it a value attribute -->
               <xsl:for-each select="./category">
-                
+
                 <xsl:element name="category">
                   <xsl:attribute name="value">
                     <xsl:value-of select="translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
                   </xsl:attribute>
                   <xsl:value-of select="."/>
                 </xsl:element>
-                
+
               </xsl:for-each>
             </xsl:otherwise>
           </xsl:choose>
@@ -1156,19 +1155,19 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
       <xsl:variable name="lowercase-unique-counted-main-categories">
         <xsl:for-each select="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[not(./@value = preceding-sibling::main-category/@value)]">
           <xsl:variable name="this-main-category" select="."/>
-          
+
           <xsl:element name="main-category">
             <xsl:attribute name="value">
               <xsl:value-of select="./@value"/>
             </xsl:attribute>
-            
+
             <xsl:attribute name="count">
               <xsl:value-of select="count(exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[./@value = $this-main-category/@value])"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="./text()"/>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
 
@@ -1181,55 +1180,55 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
       <xsl:variable name="lowercase-unique-counted-categories">
         <xsl:for-each select="exsl:node-set($lowercase-duplicate-categories)//category[not(./@value = preceding-sibling::category/@value)]">
           <xsl:variable name="this-category" select="."/>
-          
+
           <xsl:element name="category">
             <xsl:attribute name="value">
               <xsl:value-of select="./@value"/>
             </xsl:attribute>
-            
+
             <xsl:attribute name="count">
               <xsl:value-of select="count(exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)//category[./@value = $this-category/@value])"/>
             </xsl:attribute>
             <xsl:value-of select="./text()"/>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
 
       <xsl:variable name="lowercase-unique-counted-main-categories-with-unique-sub-categories">
         <xsl:for-each select="exsl:node-set($lowercase-unique-counted-main-categories)/main-category">
           <xsl:variable name="this-main-category" select="."/>
-          
+
           <xsl:element name="main-category">
             <xsl:attribute name="value">
               <xsl:value-of select="./@value"/>
             </xsl:attribute>
-            
+
             <xsl:attribute name="count">
               <xsl:value-of select="./@count"/>
             </xsl:attribute>
-            
+
             <xsl:value-of select="."/>
             <xsl:for-each select="exsl:node-set($lowercase-unique-counted-categories)/category">
               <xsl:variable name="this-category" select="."/>
               <xsl:if test="exsl:node-set($lowercase-duplicate-main-categories-with-duplicate-sub-categories)/main-category[./@value = $this-main-category/@value]/category[./@value = $this-category/@value]">
-                
+
                 <xsl:element name="category">
                   <xsl:attribute name="value">
                     <xsl:value-of select="$this-category/@value"/>
                   </xsl:attribute>
-                  
+
                   <xsl:attribute name="count">
                     <xsl:value-of select="$this-category/@count"/>
                   </xsl:attribute>
-                  
+
                   <xsl:value-of select="$this-category"/>
                 </xsl:element>
-                
+
               </xsl:if>
             </xsl:for-each>
           </xsl:element>
-          
+
         </xsl:for-each>
       </xsl:variable>
 
@@ -1239,27 +1238,31 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
           <xsl:copy-of select="exsl:node-set($lowercase-unique-counted-categories)/category[./@value = $this-category/@value]"/>
         </xsl:for-each>
       </xsl:variable>
-      
+
       <!--output the list-->
       <ul class="blog-by-category">
         <xsl:for-each select="exsl:node-set($lowercase-unique-counted-main-categories-with-unique-sub-categories)/main-category">
-          
+
           <xsl:if test="./text()">
-            
+
             <li>
 
               <xsl:call-template name="category-list-link">
-                <xsl:with-param name="path" select="$PATH"/>
+                <xsl:with-param name="path">
+                  <xsl:text>blog</xsl:text>
+                </xsl:with-param>
               </xsl:call-template>
-              
-              
+
+
               <xsl:if test="./category">
                 <ul>
                   <xsl:for-each select="./category">
                     <li>
 
                       <xsl:call-template name="category-list-link">
-                        <xsl:with-param name="path" select="$PATH"/>
+                        <xsl:with-param name="path">
+                          <xsl:text>blog</xsl:text>
+                        </xsl:with-param>
                       </xsl:call-template>
                     </li>
                   </xsl:for-each>
@@ -1269,17 +1272,17 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
             </li>
           </xsl:if>
         </xsl:for-each>
-        
+
         <xsl:for-each select="exsl:node-set($lowercase-unique-counted-top-level-categories)">
-         
+
           <xsl:if test="./text()">
             <li>
-               <xsl:call-template name="category-list-link"/>     
+               <xsl:call-template name="category-list-link"/>
             </li>
           </xsl:if>
 
         </xsl:for-each>
-        
+
       </ul>
     </xsl:for-each>
   </xsl:template>
@@ -1378,7 +1381,7 @@ translate('CONVERT this TO ALL loWeRcase', $uppercase, $lowercase) -->
               <xsl:value-of select="$x_page"/>
             </xsl:if>
           </xsl:element>
-        </xsl:element>        
+        </xsl:element>
 
         <xsl:element name="ul">
           <xsl:attribute name="id">
@@ -1434,7 +1437,7 @@ add sorting by priority number as an extra sort criteria
                     <xsl:with-param name="date-format" select="$new-bloglist/@date-format"/>
                   </xsl:apply-templates>
                 </xsl:when>
-                
+
                 <xsl:otherwise>
                   <xsl:apply-templates select="$new-bloglist/blog" mode="image">
                     <xsl:sort order="{@sort-order}" select="@*[name()=$sort-by]"/>
@@ -1450,7 +1453,7 @@ add sorting by priority number as an extra sort criteria
           </xsl:choose>
 
         </xsl:element>
-        
+
         <!--<div class="pagination compact-theme simple-pagination"></div>-->
 
         <div class="row filterRow">
@@ -1463,8 +1466,9 @@ add sorting by priority number as an extra sort criteria
         <xsl:variable name="containerID" select="concat('&quot;',$new-bloglist/@name,'&quot;')"/>
 
         <script type="text/javascript">
+          /* <![CDATA[ */
           $(window).load(function() {
-          var bloglist = "#" + <xsl:value-of select="$containerID"/>;
+          var bloglist = "#" + /* ]]]]><![CDATA[> */ <xsl:value-of select="$containerID"/> ;
           var $containerID = <xsl:value-of select="$containerID"/>;
           var lang = '<xsl:processing-instruction name="php">echo WebPal::language();</xsl:processing-instruction>';
 
@@ -1572,8 +1576,8 @@ add sorting by priority number as an extra sort criteria
           }
           );
           });
-          
-              
+
+
 
 
 
@@ -1608,16 +1612,16 @@ add sorting by priority number as an extra sort criteria
                 <xsl:with-param name="date" select="./@date"/>
               </xsl:call-template>
             </xsl:variable>
-            
+
             <xsl:choose>
               <xsl:when test="$date-format='custom_M_d'">
                 <xsl:copy-of select="$formatted-date"/>
               </xsl:when>
-              
+
               <xsl:otherwise>
                 <xsl:value-of select="$formatted-date"/>
               </xsl:otherwise>
-              
+
             </xsl:choose>
 
           </xsl:if>
@@ -1631,9 +1635,9 @@ add sorting by priority number as an extra sort criteria
             <xsl:value-of select="title"/>
             <xsl:text disable-output-escaping="yes">"&gt;</xsl:text>
           </xsl:if>
-          
+
           <xsl:value-of select="title"/>
-          
+
           <xsl:if test="./@link">
             <xsl:text disable-output-escaping="yes">&lt;/a&gt;</xsl:text>
           </xsl:if>
@@ -1668,20 +1672,20 @@ add sorting by priority number as an extra sort criteria
 
         <!-- content here -->
         <xsl:if test="contains($layout,'text')">
-          <div class="entry">      
+          <div class="entry">
               <xsl:apply-templates select="text" />
-            <!--<img alt="" data-file-id="imgD9miHeVA7Y5n.jpg" data-original="?f=imgD9miHeVA7Y5n.jpg&amp;_dm_id=imgD9miHeVA7Y5n.jpg" style=";" class="img-responsive lazy" />-->         
+            <!--<img alt="" data-file-id="imgD9miHeVA7Y5n.jpg" data-original="?f=imgD9miHeVA7Y5n.jpg&amp;_dm_id=imgD9miHeVA7Y5n.jpg" style=";" class="img-responsive lazy" />-->
           </div>
-          
+
         </xsl:if>
         <!--   /content        -->
       </li>
     </xsl:if>
-    
-    
+
+
   </xsl:template>
 
-  
+
   <xsl:template match="blog" mode="image">
     <xsl:param name="max-items"/>
     <xsl:param name="items-per-page"/>
@@ -1712,49 +1716,49 @@ details
 |-content
 -->
         <xsl:element name="details">
-          
+
           <!-- summary shows while the post is collapsed -->
           <xsl:element name="summary">
-            
+
             <!-- title (mandatory) -->
             <xsl:element name="div">
               <xsl:attribute name="class">
                 <xsl:text>meta-title</xsl:text>
               </xsl:attribute>
-              
+
               <xsl:choose>
                 <xsl:when test="./@link">
-                  
+
                   <xsl:element name="a">
                     <xsl:attribute name="href">
                       <xsl:value-of select="./@link"/>
                     </xsl:attribute>
-                    
+
                     <xsl:attribute name="rel">
                       <xsl:text>bookmark</xsl:text>
                     </xsl:attribute>
-                    
+
                     <xsl:attribute name="title">
                       <xsl:value-of select="./title"/>
                     </xsl:attribute>
-                    
+
                     <h2>
                       <xsl:value-of select="./title"/>
                     </h2>
-                    
+
                   </xsl:element>
-                  
+
                 </xsl:when>
-                
+
                 <xsl:otherwise>
                   <h2>
                     <xsl:value-of select="./title"/>
                   </h2>
                 </xsl:otherwise>
-                
+
               </xsl:choose>
             </xsl:element>
-            
+
             <!-- meta -->
             <xsl:element name="div">
               <xsl:attribute name="class">
@@ -1766,84 +1770,84 @@ details
                 <xsl:attribute name="class">
                   <xsl:text>meta-date</xsl:text>
                 </xsl:attribute>
-                
+
                 <xsl:if test="contains($layout,'date')">
-                  
+
                   <xsl:variable name="formatted-date">
                     <xsl:call-template name="format-date-blog">
                       <xsl:with-param name="format" select="$date-format"/>
                       <xsl:with-param name="date" select="./@date"/>
                     </xsl:call-template>
                   </xsl:variable>
-                  
+
                   <xsl:choose>
-                    
+
                     <xsl:when test="$date-format='custom_M_d'">
                       <!-- The custom date returns rendered html, so we want a copy rather than just the value -->
                       <xsl:copy-of select="$formatted-date"/>
                     </xsl:when>
-                    
+
                     <xsl:otherwise>
                       <xsl:value-of select="$formatted-date"/>
                     </xsl:otherwise>
-                    
+
                   </xsl:choose>
-                  
+
                 </xsl:if>
-                
+
               </xsl:element>
-              
+
               <!-- author -->
               <xsl:element name="div">
                 <xsl:attribute name="class">
                   <xsl:text>meta-author</xsl:text>
                 </xsl:attribute>
               </xsl:element>
-              
+
               <!-- categories -->
               <xsl:if test="count(./categories/*) &gt; 0">
-                
+
                 <xsl:element name="ul">
                   <xsl:for-each select="./categories/*">
-                    
+
                     <xsl:element name="li">
                       <xsl:attribute name="class">
                         <xsl:text>category</xsl:text>
                       </xsl:attribute>
-                      
+
                       <xsl:value-of select="."/>
                     </xsl:element>
-                    
+
                   </xsl:for-each>
                 </xsl:element>
-                
+
               </xsl:if>
               <!-- tags -->
               <xsl:if test="count(./tags/*) &gt; 0">
-                
+
                 <xsl:element name="ul">
                   <xsl:for-each select="./tags/*">
-                    
+
                     <xsl:element name="li">
                       <xsl:attribute name="class">
                         <xsl:text>tag</xsl:text>
                       </xsl:attribute>
-                      
+
                       <xsl:value-of select="."/>
                     </xsl:element>
-                    
+
                   </xsl:for-each>
                 </xsl:element>
-                
+
               </xsl:if>
             </xsl:element>
-            
+
             <!-- image -->
             <xsl:element name="div">
               <xsl:attribute name="class">
                 <xsl:text>item-image</xsl:text>
               </xsl:attribute>
-              
+
               <!--           <xsl:element name="img">
 <xsl:attribute name="src">
 <xsl:text>?ft=</xsl:text>
@@ -1857,44 +1861,44 @@ details
 </xsl:attribute>
 </xsl:element> -->
             </xsl:element>
-            
+
             <!-- summary content -->
             <xsl:element name="p">
               <xsl:attribute name="class">summary</xsl:attribute>
               <xsl:value-of select="concat(substring($article_text, 0, 100), '...')"/>
             </xsl:element>
-            
+
             <!-- read more link -->
             <xsl:element name="div">
               <xsl:attribute name="class">
                 <xsl:text>read-more</xsl:text>
               </xsl:attribute>
-              
+
               <xsl:element name="a">
                 <xsl:text>Read More</xsl:text>
               </xsl:element>
-              
+
             </xsl:element>
-            
+
           </xsl:element>
-          
+
           <!-- content shows while the post is expanded -->
           <xsl:element name="content">
-            
+
             <xsl:element name="div">
               <xsl:attribute name="class">content</xsl:attribute>
               <xsl:apply-templates select="text"/>
             </xsl:element>
-            
+
           </xsl:element>
-          
+
         </xsl:element>
-        
+
       </xsl:element>
     </xsl:if>
   </xsl:template>
 
-  
+
   <xsl:template match="blog[@upcoming='yes']" mode="upcoming">
     <xsl:param name="max-items"/>
     <xsl:param name="items-per-page"/>
@@ -1906,7 +1910,7 @@ details
       <xsl:variable name="text">
         <xsl:apply-templates select="./text"/>
       </xsl:variable>
-      
+
       <xsl:for-each select="exsl:node-set($text)/*">
         <xsl:value-of select="."/>
         <xsl:if test="string-length(.)=0">
@@ -1914,30 +1918,30 @@ details
         </xsl:if>
       </xsl:for-each>
     </xsl:variable>
-    
+
     <xsl:variable name="blog-summary">
       <xsl:value-of select="concat(substring($blog-text, 0, 100), '...')"/>
     </xsl:variable>
-    
+
     <xsl:if test="position() &lt;= $max-items">
 
       <li>
         <div class="meta meta-date">
           <!-- date here -->
           <xsl:if test="contains($layout,'date')">
-            
+
             <xsl:variable name="formatted-date">
               <xsl:call-template name="format-date-blog">
                 <xsl:with-param name="format" select="$date-format"/>
                 <xsl:with-param name="date" select="./@date"/>
               </xsl:call-template>
             </xsl:variable>
-            
+
             <xsl:choose>
               <xsl:when test="$date-format='custom_M_d'">
                 <xsl:copy-of select="$formatted-date"/>
               </xsl:when>
-              
+
               <xsl:otherwise>
                 <xsl:value-of select="$formatted-date"/>
               </xsl:otherwise>
@@ -1955,9 +1959,9 @@ details
             <xsl:value-of select="title"/>
             <xsl:text disable-output-escaping="yes">"&gt;</xsl:text>
           </xsl:if>
-          
+
           <xsl:value-of select="title"/>
-          
+
           <xsl:if test="$blog-base-link and @name">
             <!--             <xsl:if test="./@link"> -->
             <xsl:text disable-output-escaping="yes">&lt;/a&gt;</xsl:text>
@@ -1969,11 +1973,11 @@ details
           <xsl:value-of select="$blog-summary" />
         </div>
       </li>
-      
+
     </xsl:if>
   </xsl:template>
 
-  
+
   <!-- ========================================================================================= -->
   <!-- ============================ Individual blog page template ============================== -->
   <!-- ========================================================================================= -->
@@ -1986,17 +1990,17 @@ details
         <xsl:with-param name="blog-base-link" select="''"/>
       </xsl:apply-templates>
     </xsl:variable>
-    
+
     <xsl:variable name="sorted-articles">
       <xsl:call-template name="sorted-articles"/>
     </xsl:variable>
 
     <xsl:variable name="blog" select="exsl:node-set($blog-tree)/blog"/>
-    
+
     <xsl:variable name="blogname">
       <xsl:value-of select="$blog/@name"/>
     </xsl:variable>
-    
+
     <div class="row">
       <!-- =======content======= -->
       <div class="col-md-9 col-sm-12 content blog-content blog-entry">
@@ -2004,23 +2008,23 @@ details
           <xsl:value-of select="$blog/title"/>
         </h1>
         <div class="meta" style="padding-bottom: 10px;">
-           
+
           <xsl:call-template name="meta-line"/>
         </div>
-        
+
         <!-- content here -->
         <div class="entry">
-          <xsl:apply-templates select="$blog/text" >
-            
-          </xsl:apply-templates>
-          
+          <xsl:apply-templates select="$blog/text"/>
+
+<!--           </xsl:apply-templates> -->
+
           <xsl:if test="$blog/image">
              <xsl:call-template name="imgLink">
                 <xsl:with-param name="src" select="$blog/image/@src"/>
                 <xsl:with-param name="width" select="500"/>
                 <xsl:with-param name="height" select="500"/>
              </xsl:call-template>
-            
+
 <!--         <xsl:variable name="metaStringVar">
               <xsl:text>'</xsl:text>
               <xsl:call-template name="meta-og-image">
@@ -2033,30 +2037,30 @@ details
              -->
 <!--             <script type="text/javascript" src="/resources/Bloglist/js/metaTag.js"/> -->
 <!--             <script type="text/javascript"> -->
-              
+
 <!--                $(window).load(function() { -->
 <!--                   var source = '<xsl:value-of select="$blog/image/@src"/>'; -->
-                 
+
 <!--                   setMetaImg(source); -->
-              
-                 
+
+
 <!--               });  -->
-            
+
 <!--             </script> -->
-             
-            
+
+
           </xsl:if>
-          
+
           <xsl:variable name="blogPath">
-            <xsl:value-of select="$PATH"/>
+            <xsl:text>blog</xsl:text>
             <xsl:text>?node=</xsl:text>
             <xsl:value-of select="./@name"/>
           </xsl:variable>
-          
+
           <div class="share-container">
                         <span class="label">share this:</span>
-   
-        
+
+
                         <!-- Buttons start here. Copy this ul to your document. -->
                         <ul class="rrssb-buttons clearfix rrssb-1">
 <!--                             <li class="rrssb-facebook" data-initwidth="14.285714285714286" data-size="64" style="width: calc(25% - 31.5px);"> -->
@@ -2073,19 +2077,17 @@ details
                                     <xsl:text>We%20arePalomino%30System%20Innovations%20Inc.,%20a%20global%20web%20solutions%20provider,%20and%20creator%20of%20the%20WebPal%20Cloud%20Server,%20with%20over%20400,000%20logins%20world-wide.%20We%20specialize%20in%20managed%20cloud%20services,%20content%20management,%20and%20web%20application%20development. </xsl:text>
 <!--                                     <xsl:value-of select="./@name"/> -->
                                   </xsl:attribute>
-                                
+
                                 <xsl:attribute name="class">
                                   <xsl:text>popup</xsl:text>
                                 </xsl:attribute>
-                              
-                                
+
+
                                     <span class="rrssb-icon">
-                                      
-                                      <xsl:element name="svg">
+
+                                      <xsl:element name="svg" xmlns="https://www.w3.org/TR/SVG11" xmlns:xlink="http://www.w3.org/1999/xlink">
                                           <xsl:attribute name="version">1.1</xsl:attribute>
                                           <xsl:attribute name="id">Layer_1</xsl:attribute>
-                                          <xsl:attribute name="xmlns">https://www.w3.org/TR/SVG11</xsl:attribute>
-                                          <xsl:attribute name="xmlns:xlink">http://www.w3.org/1999/xlink</xsl:attribute>
                                           <xsl:attribute name="x">0px</xsl:attribute>
                                           <xsl:attribute name="y">0px</xsl:attribute>
                                           <xsl:attribute name="width">28px</xsl:attribute>
@@ -2099,9 +2101,9 @@ details
                                                 c0,2.427,2.181,4.608,4.608,4.608H14V17.379h-3.379v-4.608H14v-1.795c0-3.089,2.335-5.885,5.192-5.885h3.718v4.608h-3.726
                                                 c-0.408,0-0.884,0.492-0.884,1.236v1.836h4.609v4.608h-4.609v10.446h4.916c2.422,0,4.608-2.188,4.608-4.608V4.783z</xsl:attribute>
                                           </xsl:element>
-                                        
+
                                       </xsl:element>
-                                      
+
                                     </span>
 <!--                                     <span class="rrssb-text">facebook</span> -->
                                 </xsl:element>
@@ -2109,26 +2111,24 @@ details
 <!--                             <li class="rrssb-twitter" data-initwidth="14.285714285714286" data-size="49" style="width: calc(25% - 31.5px);"> -->
                               <li class="rrssb-twitter" data-initwidth="14.285714285714286" data-size="49" style="width: 42px;">
                                 <!-- Replace href with your Meta and URL information  -->
-                                
+
                                   <xsl:element name="a">
                                   <xsl:attribute name="href">
-                                     
+
                                     <xsl:text>http://twitter.com/home?status=</xsl:text>
                                     <xsl:value-of select="title"/>
                                    <xsl:text> %20https://palominosys.com</xsl:text>
                                     <xsl:value-of select="$blogPath"/>
                                   </xsl:attribute>
-                                
+
                                 <xsl:attribute name="class">
                                   <xsl:text>popup</xsl:text>
                                 </xsl:attribute>
-                                  
+
                                     <span class="rrssb-icon">
-                                      <xsl:element name="svg">
+                                      <xsl:element name="svg" xmlns="https://www.w3.org/TR/SVG11" xmlns:xlink="http://www.w3.org/1999/xlink">
                                           <xsl:attribute name="version">1.1</xsl:attribute>
                                           <xsl:attribute name="id">Layer_1</xsl:attribute>
-                                          <xsl:attribute name="xmlns">https://www.w3.org/TR/SVG11</xsl:attribute>
-                                          <xsl:attribute name="xmlns:xlink">http://www.w3.org/1999/xlink</xsl:attribute>
                                           <xsl:attribute name="x">0px</xsl:attribute>
                                           <xsl:attribute name="y">0px</xsl:attribute>
                                           <xsl:attribute name="width">28px</xsl:attribute>
@@ -2145,62 +2145,15 @@ details
                                             c1.186-0.213,2.318-0.662,3.329-1.317c-0.385,1.256-1.247,2.312-2.399,2.942c1.048-0.106,2.069-0.394,3.019-0.851
                                             C26.275,7.229,25.39,8.196,24.253,8.756z</xsl:attribute>
                                           </xsl:element>
-                                        
+
                                       </xsl:element>
-                                        
+
                                    </span>
 <!--                                     <span class="rrssb-text">twitter</span> -->
                                  </xsl:element>
                             </li>
 <!--                             <li class="rrssb-reddit" data-initwidth="14.285714285714286" data-size="41" style="width: calc(25% - 31.5px);"> -->
-                          <li class="rrssb-reddit" data-initwidth="14.285714285714286" data-size="41" style="width: 42px;">
-                               
-                                  <xsl:element name="a">
-                                    <xsl:attribute name="href">
-                                      <xsl:text>http://www.reddit.com/submit?url=https://palominosys.com</xsl:text>
-                                      <xsl:value-of select="$blogPath"/>
-                                      <xsl:text>&amp;title=</xsl:text>
-                                       <xsl:value-of select="title"/>
-                                      <xsl:text>&amp;description=</xsl:text>
-                                      <xsl:text>We%20arePalomino%30System%20Innovations%20Inc.,%20a%20global%20web%20solutions%20provider,%20and%20creator%20of%20the%20WebPal%20Cloud%20Server,%20with%20over%20400,000%20logins%20world-wide.%20We%20specialize%20in%20managed%20cloud%20services,%20content%20management,%20and%20web%20application%20development. </xsl:text>
-  <!--                                     <xsl:value-of select="./@name"/> -->
-                                    </xsl:attribute>
-                                
-                                    <xsl:attribute name="class">
-                                      <xsl:text>popup</xsl:text>
-                                    </xsl:attribute> 
-                                    <span class="rrssb-icon">
-                                      <xsl:element name="svg">
-                                          <xsl:attribute name="version">1.1</xsl:attribute>
-                                          <xsl:attribute name="id">Layer_1</xsl:attribute>
-                                          <xsl:attribute name="xmlns">https://www.w3.org/TR/SVG11</xsl:attribute>
-                                          <xsl:attribute name="xmlns:xlink">http://www.w3.org/1999/xlink</xsl:attribute>
-                                          <xsl:attribute name="x">0px</xsl:attribute>
-                                          <xsl:attribute name="y">0px</xsl:attribute>
-                                          <xsl:attribute name="width">28px</xsl:attribute>
-                                          <xsl:attribute name="height">28px</xsl:attribute>
-                                          <xsl:attribute name="viewBox">0 0 28 28</xsl:attribute>
-                                          <xsl:attribute name="enable-background">new 0 0 28 28</xsl:attribute>
-                                          <xsl:attribute name="xml:space">preserve</xsl:attribute>
-                                          <xsl:attribute name="height">28px</xsl:attribute>
-                                          <xsl:element name="path">
-                                            <xsl:attribute name="d">M11.794 15.316c0-1.029-0.835-1.895-1.866-1.895c-1.03 0-1.893 0.865-1.893 1.895s0.863 1.9 1.9 1.9 C10.958 17.2 11.8 16.3 11.8 15.316z</xsl:attribute>
-                                          </xsl:element>
-                                          <xsl:element name="path">
-                                            <xsl:attribute name="d">M18.1 13.422c-1.029 0-1.895 0.864-1.895 1.895c0 1 0.9 1.9 1.9 1.865c1.031 0 1.869-0.836 1.869-1.865 C19.969 14.3 19.1 13.4 18.1 13.422z</xsl:attribute>
-                                          </xsl:element>
-                                          <xsl:element name="path">
-                                            <xsl:attribute name="d">M17.527 19.791c-0.678 0.678-1.826 1.006-3.514 1.006c-0.004 0-0.009 0-0.014 0c-0.004 0-0.01 0-0.015 0 c-1.686 0-2.834-0.328-3.51-1.005c-0.264-0.265-0.693-0.265-0.958 0c-0.264 0.265-0.264 0.7 0 1 c0.943 0.9 2.4 1.4 4.5 1.402c0.005 0 0 0 0 0c0.005 0 0 0 0 0c2.066 0 3.527-0.459 4.47-1.402 c0.265-0.264 0.265-0.693 0.002-0.958C18.221 19.5 17.8 19.5 17.5 19.791z</xsl:attribute>
-                                          </xsl:element>
-                                          <xsl:element name="path">
-                                            <xsl:attribute name="d">M27.707 13.267c0-1.785-1.453-3.237-3.236-3.237c-0.793 0-1.518 0.287-2.082 0.761c-2.039-1.295-4.646-2.069-7.438-2.219 l1.483-4.691l4.062 0.956c0.071 1.4 1.3 2.6 2.7 2.555c1.488 0 2.695-1.208 2.695-2.695C25.881 3.2 24.7 2 23.2 2 c-1.059 0-1.979 0.616-2.42 1.508l-4.633-1.091c-0.344-0.081-0.693 0.118-0.803 0.455l-1.793 5.7 C10.548 8.6 7.7 9.4 5.6 10.75C5.006 10.3 4.3 10 3.5 10.029c-1.785 0-3.237 1.452-3.237 3.2 c0 1.1 0.6 2.1 1.4 2.69c-0.04 0.272-0.061 0.551-0.061 0.831c0 2.3 1.3 4.4 3.7 5.9 c2.299 1.5 5.3 2.3 8.6 2.325c3.228 0 6.271-0.825 8.571-2.325c2.387-1.56 3.7-3.66 3.7-5.917 c0-0.26-0.016-0.514-0.051-0.768C27.088 15.5 27.7 14.4 27.7 13.267z M23.186 3.355c0.74 0 1.3 0.6 1.3 1.3 c0 0.738-0.6 1.34-1.34 1.34s-1.342-0.602-1.342-1.34C21.844 4 22.4 3.4 23.2 3.355z M1.648 13.3 c0-1.038 0.844-1.882 1.882-1.882c0.31 0 0.6 0.1 0.9 0.209c-1.049 0.868-1.813 1.861-2.26 2.9 C1.832 14.2 1.6 13.8 1.6 13.267z M21.773 21.57c-2.082 1.357-4.863 2.105-7.831 2.105c-2.967 0-5.747-0.748-7.828-2.105 c-1.991-1.301-3.088-3-3.088-4.782c0-1.784 1.097-3.484 3.088-4.784c2.081-1.358 4.861-2.106 7.828-2.106 c2.967 0 5.7 0.7 7.8 2.106c1.99 1.3 3.1 3 3.1 4.784C24.859 18.6 23.8 20.3 21.8 21.57z M25.787 14.6 c-0.432-1.084-1.191-2.095-2.244-2.977c0.273-0.156 0.59-0.245 0.928-0.245c1.035 0 1.9 0.8 1.9 1.9 C26.354 13.8 26.1 14.3 25.8 14.605z</xsl:attribute>
-                                          </xsl:element>
-                                        
-                                      </xsl:element>
-                                    </span>
-<!--                                       <span class="rrssb-text">reddit</span> -->
-                                </xsl:element>
-                            </li>
+                          <!-- Removed rrssb-reddit -->
 <!--                             <li class="rrssb-googleplus" data-initwidth="14.285714285714286" data-size="56" style="width: calc(25% - 31.5px);"> -->
                               <li class="rrssb-googleplus" data-initwidth="14.285714285714286" data-size="56" style="width: 42px;">
                                 <!-- Replace href with your meta and URL information.  -->
@@ -2210,20 +2163,18 @@ details
                                         <xsl:value-of select="title"/>
                                         <xsl:text>%20https://palominosys.com</xsl:text>
                                       <xsl:value-of select="$blogPath"/>
-                                      
+
                                     </xsl:attribute>
-                                
+
                                     <xsl:attribute name="class">
                                       <xsl:text>popup</xsl:text>
-                                    </xsl:attribute> 
-                                
-                                  
+                                    </xsl:attribute>
+
+
                                     <span class="rrssb-icon">
-                                        <xsl:element name="svg">
+                                        <xsl:element name="svg" xmlns="https://www.w3.org/TR/SVG11" xmlns:xlink="http://www.w3.org/1999/xlink">
                                           <xsl:attribute name="version">1.1</xsl:attribute>
                                           <xsl:attribute name="id">Layer_1</xsl:attribute>
-                                          <xsl:attribute name="xmlns">https://www.w3.org/TR/SVG11</xsl:attribute>
-                                          <xsl:attribute name="xmlns:xlink">http://www.w3.org/1999/xlink</xsl:attribute>
                                           <xsl:attribute name="x">0px</xsl:attribute>
                                           <xsl:attribute name="y">0px</xsl:attribute>
                                           <xsl:attribute name="width">28px</xsl:attribute>
@@ -2251,9 +2202,9 @@ details
                                                         23.254,17.004 23.254,13.604 26.653,13.604 26.653,11.89      </xsl:attribute>
                                                   </xsl:element>
                                             </xsl:element>
-                                        </xsl:element>    
+                                        </xsl:element>
                                       </xsl:element>
-                                        
+
                                     </span>
 <!--                                     <span class="rrssb-text">google+</span> -->
                               </xsl:element>
@@ -2265,18 +2216,16 @@ details
                                       <xsl:value-of select="$blogPath"/>
                                       <xsl:text>&amp;title=</xsl:text>
                                        <xsl:value-of select="title"/>
-                                      
+
                                     </xsl:attribute>
-                                
+
                                     <xsl:attribute name="class">
                                       <xsl:text>popup</xsl:text>
                                   </xsl:attribute>
-                                    <span class="rrssb-icon"> 
-                                      <xsl:element name="svg">
+                                    <span class="rrssb-icon">
+                                      <xsl:element name="svg" xmlns="https://www.w3.org/TR/SVG11" xmlns:xlink="http://www.w3.org/1999/xlink">
                                           <xsl:attribute name="version">1.1</xsl:attribute>
                                           <xsl:attribute name="id">Layer_1</xsl:attribute>
-                                          <xsl:attribute name="xmlns">https://www.w3.org/TR/SVG11</xsl:attribute>
-                                          <xsl:attribute name="xmlns:xlink">http://www.w3.org/1999/xlink</xsl:attribute>
                                           <xsl:attribute name="x">0px</xsl:attribute>
                                           <xsl:attribute name="y">0px</xsl:attribute>
                                           <xsl:attribute name="width">28px</xsl:attribute>
@@ -2285,22 +2234,22 @@ details
                                           <xsl:attribute name="enable-background">new 0 0 28 28</xsl:attribute>
                                           <xsl:attribute name="xml:space">preserve</xsl:attribute>
                                           <xsl:attribute name="height">28px</xsl:attribute>
-                                          
+
                                                   <xsl:element name="path">
                                                   <xsl:attribute name="d">M25.424,15.887v8.447h-4.896v-7.882c0-1.979-0.709-3.331-2.48-3.331c-1.354,0-2.158,0.911-2.514,1.803
                                                 c-0.129,0.315-0.162,0.753-0.162,1.194v8.216h-4.899c0,0,0.066-13.349,0-14.731h4.899v2.088c-0.01,0.016-0.023,0.032-0.033,0.048
                                                 h0.033V11.69c0.65-1.002,1.812-2.435,4.414-2.435C23.008,9.254,25.424,11.361,25.424,15.887z M5.348,2.501
                                                 c-1.676,0-2.772,1.092-2.772,2.539c0,1.421,1.066,2.538,2.717,2.546h0.032c1.709,0,2.771-1.132,2.771-2.546
                                                 C8.054,3.593,7.019,2.501,5.343,2.501H5.348z M2.867,24.334h4.897V9.603H2.867V24.334z</xsl:attribute>
-                                                  </xsl:element>         
+                                                  </xsl:element>
                                       </xsl:element>
-                                      
-                                        
+
+
                                     </span>
                                     <span class="rrssb-text">linkedin</span>
                               </xsl:element>
                             </li>
-        
+
                             <li class="rrssb-pocket small" data-initwidth="14.285714285714286" data-size="46" style="width: 42px;">
                               <xsl:element name="a">
                                     <xsl:attribute name="href">
@@ -2312,17 +2261,15 @@ details
                                       <xsl:text>We%20arePalomino%30System%20Innovations%20Inc.,%20a%20global%20web%20solutions%20provider,%20and%20creator%20of%20the%20WebPal%20Cloud%20Server,%20with%20over%20400,000%20logins%20world-wide.%20We%20specialize%20in%20managed%20cloud%20services,%20content%20management,%20and%20web%20application%20development. </xsl:text>
   <!--                                     <xsl:value-of select="./@name"/> -->
                                     </xsl:attribute>
-                                
+
                                     <xsl:attribute name="class">
                                       <xsl:text>popup</xsl:text>
-                                  </xsl:attribute>  
-                              
+                                  </xsl:attribute>
+
                                     <span class="rrssb-icon">
-                                      <xsl:element name="svg">
+                                      <xsl:element name="svg" xmlns="https://www.w3.org/TR/SVG11" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketh="http://www.bohemiancoding.com/sketch/ns" >
                                           <xsl:attribute name="version">1.1</xsl:attribute>
                                           <xsl:attribute name="id">Layer_1</xsl:attribute>
-                                          <xsl:attribute name="xmlns">https://www.w3.org/TR/SVG11</xsl:attribute>
-                                          <xsl:attribute name="xmlns:xlink">http://www.w3.org/1999/xlink</xsl:attribute>
                                           <xsl:attribute name="x">0px</xsl:attribute>
                                           <xsl:attribute name="y">0px</xsl:attribute>
                                           <xsl:attribute name="width">32px</xsl:attribute>
@@ -2330,35 +2277,32 @@ details
                                           <xsl:attribute name="viewBox">0 0 32 28</xsl:attribute>
                                           <xsl:attribute name="enable-background">new 0 0 32 28</xsl:attribute>
                                           <xsl:attribute name="xml:space">preserve</xsl:attribute>
-                                          <xsl:attribute name="xmlns:sketch">"http://www.bohemiancoding.com/sketch/ns</xsl:attribute>
-                                          
+
                                                   <xsl:element name="path">
                                                   <xsl:attribute name="d">M28.7817528,0.00172488695 C30.8117487,0.00431221738 31.9749312,1.12074529 31.9644402,3.10781507 C31.942147,6.67703739 32.1336065,10.2669583 31.8057648,13.8090137 C30.7147076,25.5813672 17.2181194,31.8996281 7.20714461,25.3808491 C2.71833574,22.4571656 0.196577202,18.3122624 0.0549495772,12.9357897 C-0.0342233715,9.5774348 0.00642900214,6.21519891 0.0300336062,2.85555035 C0.0405245414,1.1129833 1.21157517,0.0146615391 3.01995012,0.00819321302 C7.34746087,-0.00603710433 11.6775944,0.00431221738 16.0064164,0.00172488695 C20.2644248,0.00172488695 24.5237444,-0.00215610869 28.7817528,0.00172488695 L28.7817528,0.00172488695 Z M8.64885184,7.85611511 C7.38773662,7.99113854 6.66148108,8.42606978 6.29310958,9.33228474 C5.90114134,10.2969233 6.17774769,11.1421181 6.89875951,11.8276216 C9.35282156,14.161969 11.8108164,16.4924215 14.2976518,18.7943114 C15.3844131,19.7966007 16.5354102,19.7836177 17.6116843,18.7813283 C20.0185529,16.5495467 22.4070683,14.2982907 24.7824746,12.0327533 C25.9845979,10.8850542 26.1012707,9.56468083 25.1469132,8.60653379 C24.1361858,7.59255976 22.8449191,7.6743528 21.5890476,8.85191291 C19.9936451,10.3488554 18.3680912,11.8172352 16.8395462,13.3777945 C16.1342655,14.093159 15.7200114,14.0048744 15.0566806,13.3440386 C13.4599671,11.7484252 11.8081945,10.2060421 10.1262706,8.70001155 C9.65564653,8.27936164 9.00411403,8.05345704 8.64885184,7.85611511 L8.64885184,7.85611511 L8.64885184,7.85611511 Z</xsl:attribute>
-                                                  </xsl:element>         
+                                                  </xsl:element>
                                       </xsl:element>
-                                        
+
                                     </span>
                                     <span class="rrssb-text">pocket</span>
                               </xsl:element>
                             </li>
-        
+
                             <li class="rrssb-github small" data-initwidth="14.285714285714286" data-size="43" style="width: 42px;">
                               <xsl:element name="a">
                                     <xsl:attribute name="href">
                                       <xsl:text>https://github.com/palominoinc</xsl:text>
                                     </xsl:attribute>
-                                
+
                                     <xsl:attribute name="class">
                                       <xsl:text>popup</xsl:text>
-                                  </xsl:attribute>    
-                             
+                                  </xsl:attribute>
+
                                     <span class="rrssb-icon">
-                                      
-                                      <xsl:element name="svg">
+
+                                      <xsl:element name="svg" xmlns="https://www.w3.org/TR/SVG11" xmlns:xlink="http://www.w3.org/1999/xlink">
                                           <xsl:attribute name="version">1.1</xsl:attribute>
                                           <xsl:attribute name="id">Layer_1</xsl:attribute>
-                                          <xsl:attribute name="xmlns">https://www.w3.org/TR/SVG11</xsl:attribute>
-                                          <xsl:attribute name="xmlns:xlink">http://www.w3.org/1999/xlink</xsl:attribute>
                                           <xsl:attribute name="x">0px</xsl:attribute>
                                           <xsl:attribute name="y">0px</xsl:attribute>
                                           <xsl:attribute name="width">28px</xsl:attribute>
@@ -2367,7 +2311,7 @@ details
                                           <xsl:attribute name="enable-background">new 0 0 28 28</xsl:attribute>
                                           <xsl:attribute name="xml:space">preserve</xsl:attribute>
                                           <xsl:attribute name="height">28px</xsl:attribute>
-                                          
+
                                                   <xsl:element name="path">
                                                   <xsl:attribute name="d">M13.971,1.571c-7.031,0-12.734,5.702-12.734,12.74c0,5.621,3.636,10.392,8.717,12.083c0.637,0.129,0.869-0.277,0.869-0.615
                                             c0-0.301-0.012-1.102-0.018-2.164c-3.542,0.77-4.29-1.707-4.29-1.707c-0.579-1.473-1.414-1.863-1.414-1.863
@@ -2378,9 +2322,9 @@ details
                                             c0.816,0.902,1.315,2.037,1.315,3.43c0,4.892-2.978,5.968-5.814,6.285c0.458,0.387,0.876,1.16,0.876,2.357
                                             c0,1.703-0.016,3.076-0.016,3.482c0,0.334,0.232,0.748,0.877,0.611c5.056-1.688,8.701-6.457,8.701-12.082
                                             C26.708,7.262,21.012,1.563,13.971,1.571L13.971,1.571z</xsl:attribute>
-                                                  </xsl:element>         
+                                                  </xsl:element>
                                       </xsl:element>
-                                        
+
                                     </span>
                                     <span class="rrssb-text">github</span>
                               </xsl:element>
@@ -2392,7 +2336,7 @@ details
     						<span class="nav-previous">
                               <xsl:element name="a">
                                 <xsl:attribute name="href">
-                                  <xsl:value-of select="$PATH"/>
+                                  <xsl:text>blog</xsl:text>
                                   <xsl:text>?node=</xsl:text>
                                   <xsl:value-of select="exsl:node-set($sorted-articles)/blog[./@name=$blogname]/preceding-sibling::blog[1]/@name"/>
                                 </xsl:attribute>
@@ -2400,14 +2344,14 @@ details
                                 <i class="fa fa-long-arrow-left"></i>
                                 <xsl:text>Previous</xsl:text>
                               </xsl:element>
-                              
-                                
-                            
+
+
+
                             </span>
     						<span class="nav-next">
                               <xsl:element name="a">
                                 <xsl:attribute name="href">
-                                  <xsl:value-of select="$PATH"/>
+                                  <xsl:text>blog</xsl:text>
                                   <xsl:text>?node=</xsl:text>
                                   <xsl:value-of select="exsl:node-set($sorted-articles)/blog[./@name=$blogname]/following-sibling::blog[1]/@name"/>
                                 </xsl:attribute>
@@ -2424,17 +2368,17 @@ details
       <!-- ======= /content======= -->
 
       <!-- ======= sidebar ======= -->
-      <div class="col-md-3 col-sm-12 blog-sidebar pull-right" style="padding-top: 65px;">    
+      <div class="col-md-3 col-sm-12 blog-sidebar pull-right" style="padding-top: 65px;">
           <xsl:call-template name="blog-sidebar"/>
       </div>
-      <!-- ======= /sidebar ======= -->    
-      
+      <!-- ======= /sidebar ======= -->
+
     </div>
-    
-    
-    
+
+
+
   </xsl:template>
-  
+
 
   <!-- ========================================================================================= -->
   <!-- ================================= pre-process templates ================================= -->
@@ -2462,7 +2406,7 @@ or else only the first n items will be sorted -->
         </xsl:choose>
       </xsl:for-each>
     </xsl:variable>
-    
+
     <!-- this subset represents the first page's items only -->
     <xsl:variable name="subset">
       <xsl:for-each select="exsl:node-set($sorted-articles)/blog[position() &lt;= $max-items]">
@@ -2506,21 +2450,21 @@ or else only the first n items will be sorted -->
         <xsl:when test="./@post-live-at='' or not(./@post-live-at)">
           <xsl:value-of select="php:function('strtotime','1990-01-01')"/>
         </xsl:when>
-        
+
         <xsl:otherwise>
           <xsl:value-of select="php:function('strtotime',string(./@post-live-at))"/>
         </xsl:otherwise>
-        
+
       </xsl:choose>
-      
+
     </xsl:variable>
-    
+
     <xsl:variable name="ea-time">
       <xsl:choose>
         <xsl:when test="./@expire-after='' or not(./@expire-after)">
           <xsl:value-of select="php:function('strtotime','2099-12-31')"/>
         </xsl:when>
-        
+
         <xsl:otherwise>
           <xsl:value-of select="php:function('strtotime',string(./@expire-after))"/>
         </xsl:otherwise>
@@ -2532,7 +2476,7 @@ or else only the first n items will be sorted -->
     <!-- copy breaking blog or frontpage only if one of these two options is flagged -->
     <!-- copy non-expired blog only -->
     <xsl:if test="(
-                  $index!='breaking-blog-only' 
+                  $index!='breaking-blog-only'
                   or ($index='breaking-blog-only' and @priority='breaking-blog')
                   or ($index='frontpage-only' and @priority='frontpage')
                   )
@@ -2547,11 +2491,11 @@ or else only the first n items will be sorted -->
             <xsl:when test="@priority='breaking-blog'">
               <xsl:value-of select="3"/>
             </xsl:when>
-            
+
             <xsl:when test="@priority='frontpage'">
               <xsl:value-of select="2"/>
             </xsl:when>
-            
+
             <xsl:when test="@priority='regular'">
               <xsl:value-of select="1"/>
             </xsl:when>
@@ -2576,7 +2520,7 @@ or else only the first n items will be sorted -->
       <xsl:when test="local-name()='ch' and ./@value='nbsp'">
         <xsl:text disable-output-escaping="yes"> </xsl:text>
       </xsl:when>
-      
+
       <xsl:otherwise>
         <xsl:copy>
           <xsl:apply-templates select="@*|node()" mode="pre-process"/>
@@ -2598,89 +2542,89 @@ or else only the first n items will be sorted -->
         <xsl:when test="$format='yyyy-mm-dd'">
           <xsl:value-of select="'Y-m-d'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='dd-mm-yyyy'">
           <xsl:value-of select="'d-m-Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='yyyy/mm/dd'">
           <xsl:value-of select="'Y/m/d'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='mm/dd/yyyy'">
           <xsl:value-of select="'m/d/Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='dd/mm/yyyy'">
           <xsl:value-of select="'d/m/Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='dd-Mon-yy'">
           <xsl:value-of select="'d-M-y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='dd_Mon_yyyy'">
           <xsl:value-of select="'d M Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='Weekday_Month_dd_yyyy'">
           <xsl:value-of select="'l F d Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='Weekday_dd_Month_yyyy'">
           <xsl:value-of select="'l d F Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='Wkd_Mon_dd_yyyy'">
           <xsl:value-of select="'D M d Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='Wkd_Mon_dd_yy'">
           <xsl:value-of select="'D M d y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='Month_dd_yyyy'">
           <xsl:value-of select="'F d Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='Mon_dd_yyyy'">
           <xsl:value-of select="'M d Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='MMM'">
           <xsl:value-of select="'M'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='D'">
           <xsl:value-of select="'d'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='YYYY'">
           <xsl:value-of select="'Y'"/>
         </xsl:when>
-        
+
         <xsl:when test="$format='custom_M_d'">
-          
+
           <xsl:element name="div">
             <xsl:attribute name="class">
               <xsl:text>month</xsl:text>
             </xsl:attribute>
-            
+
             <xsl:variable name="date-string" select="php:function('strtotime',string($date))"/>
             <xsl:value-of select="php:function('date','M',number($date-string))"/>
           </xsl:element>
-          
+
           <xsl:element name="div">
             <xsl:attribute name="class">
               <xsl:text>day</xsl:text>
             </xsl:attribute>
-            
+
             <xsl:variable name="date-string" select="php:function('strtotime',string($date))"/>
             <xsl:value-of select="php:function('date','d',number($date-string))"/>
           </xsl:element>
-          
+
         </xsl:when>
-        
+
       </xsl:choose>
     </xsl:variable>
 
@@ -2689,7 +2633,7 @@ or else only the first n items will be sorted -->
       <xsl:when test="$format = 'custom_M_d'">
         <xsl:copy-of select="$php-format-string"/>
       </xsl:when>
-      
+
       <xsl:otherwise>
         <xsl:variable name="date-string" select="php:function('strtotime',string($date))"/>
         <xsl:value-of select="php:function('date',$php-format-string,number($date-string))"/>
@@ -2697,9 +2641,9 @@ or else only the first n items will be sorted -->
     </xsl:choose>
 
   </xsl:template>
-  
-  
-  <!--   
+
+
+  <!--
 <xsl:template name="create_xpath_to_node">
 <xsl:param name="node_id"/>
 <xsl:param name="web_root"/>
@@ -2716,36 +2660,36 @@ or else only the first n items will be sorted -->
   <xsl:template name="create_xpath_to_node_blog">
     <xsl:param name="node_id"/>
     <xsl:param name="web_root"/>
-    
+
     <xsl:variable name="node" select="$web_root//page[@id=$node_id]"/>
     <xsl:variable name="ancestors" select="$node/ancestor::page"/>
-    
+
     <xsl:value-of select="string('/')"/>
-    
+
     <xsl:for-each select="$ancestors">
       <xsl:value-of select="@name"/>
       <xsl:value-of select="string('/')"/>
     </xsl:for-each>
-    
+
     <xsl:value-of select="$node/@name"/>
   </xsl:template>
-  
+
 <!--  ==================Recent posts widget==============================  -->
   <xsl:template name="recent-posts">
     <xsl:param name="recent"/>
-    
-    
+
+
     <xsl:for-each select="exsl:node-set($recent)/blog">
-      
+
       <xsl:variable name="blog-link">
-        <xsl:value-of select="$PATH"/>
+        <xsl:text>blog</xsl:text>
         <xsl:text>?node=</xsl:text>
         <xsl:value-of select="./@name"/>
       </xsl:variable>
-      
+
         <li>
           <div class="thumb img-responsive" >
-            
+
           <xsl:choose>
                     <xsl:when test="./image">
                       <xsl:call-template name="render-image-as-img">
@@ -2754,7 +2698,7 @@ or else only the first n items will be sorted -->
                         <xsl:with-param name="height" select="100"/>
                       </xsl:call-template>
                     </xsl:when>
-            
+
                     <xsl:otherwise>
                       <xsl:element name="img">
                         <xsl:attribute name="src">
@@ -2763,22 +2707,22 @@ or else only the first n items will be sorted -->
                       </xsl:element>
                     </xsl:otherwise>
           </xsl:choose>
-            
+
           </div>
           <span class="post-info">
-            
+
             <xsl:element name="a">
               <xsl:attribute name="class">
                 post-title
               </xsl:attribute>
-              
+
               <xsl:attribute name="href">
                 <xsl:value-of select="$blog-link"/>
               </xsl:attribute>
-              
+
               <xsl:value-of select="title"/>
             </xsl:element>
-            
+
             <br/>
             <span class="date">
               <xsl:call-template name="format-date-blog">
@@ -2786,13 +2730,13 @@ or else only the first n items will be sorted -->
                   <xsl:with-param name="format" select="'dd_Mon_yyyy'"/>
               </xsl:call-template>
             </span>
-            
+
           </span>
         </li>
     </xsl:for-each>
   </xsl:template>
-  
-  
+
+
 <!-- =================SIDEBAR=======================   -->
   <xsl:template name="blog-sidebar">
 
@@ -2801,14 +2745,14 @@ or else only the first n items will be sorted -->
     <xsl:variable name="sorted-articles">
       <xsl:call-template name="sorted-articles"/>
     </xsl:variable>
-    
+
       <!--     recent articles subset -->
     <xsl:variable name="subset-recent">
         <xsl:for-each select="exsl:node-set($sorted-articles)/blog[position() &lt;= 5]">
             <xsl:copy-of select="."/>
         </xsl:for-each>
     </xsl:variable>
-    
+
 <!--     <div class="col-md-3 blog-sidebar"> -->
     <div>
 <!--         <section class="widget search">
@@ -2823,20 +2767,20 @@ or else only the first n items will be sorted -->
           </form>
         </section> -->
         <!--//search-->
-      
+
 <!--      parent::* -->
-      
+
        <xsl:variable name="blog-link">
-        <xsl:value-of select="$PATH"/>
+        <xsl:text>blog</xsl:text>
         <xsl:text>?node=</xsl:text>
         <xsl:value-of select="./@name"/>
       </xsl:variable>
-      
+
       <xsl:choose>
         <xsl:when test="self::*/@name = 'bloglist' ">
-          
+
         </xsl:when>
-        <xsl:otherwise> 
+        <xsl:otherwise>
 <!--      <xsl:if test="child::node()"> -->
           <section class="widget recent-posts blog-filters">
             <h3 class="title"><a href = "/about-us/blog"> Recent Posts </a> </h3>
@@ -2847,37 +2791,37 @@ or else only the first n items will be sorted -->
             </xsl:call-template>
 
             </ul>
-          </section>  
+          </section>
 <!--       </xsl:if> -->
         </xsl:otherwise>
-      </xsl:choose>  
-        
+      </xsl:choose>
+
         <div class="widget blog-filters">
           <div class="title">Categories</div>
           <xsl:call-template name="output-category-list-from-blog-node" mode="meta">
             <xsl:with-param name="bloglist" select="//bloglist"/>
           </xsl:call-template>
         </div>
-      
+
         <div class="widget blog-filters">
           <div class="title">Archives</div>
           <xsl:call-template name="output-year-list-from-blog-node" mode="meta">
             <xsl:with-param name="bloglist" select="//bloglist"/>
           </xsl:call-template>
         </div>
-      
+
         <div class="widget blog-filters">
           <div class="title">Tags</div>
           <xsl:call-template name="output-tag-list-from-blog-node" mode="meta">
             <xsl:with-param name="bloglist" select="//bloglist"/>
           </xsl:call-template>
         </div>
-      
-      
+
+
       </div>
-  
+
   </xsl:template>
-  
+
   <xsl:template name="category-list-link">
   <xsl:param name="path"/>
 
@@ -2903,28 +2847,28 @@ or else only the first n items will be sorted -->
         <xsl:value-of select="')'"/>
       </span>
     </xsl:element>
-    
+
   </xsl:template>
-  
+
   <xsl:template name="sorted-articles">
-  
+
       <xsl:for-each select="//bloglist/blog">
         <xsl:sort select="php:function('strtotime',string(@date))" order="descending" />
-        
+
         <xsl:choose>
           <xsl:when test="@archived and @archived = 'yes'">
             <!-- do nothing -->
           </xsl:when>
-          
+
           <xsl:otherwise>
             <xsl:copy-of select="."/>
           </xsl:otherwise>
         </xsl:choose>
-        
+
       </xsl:for-each>
-    
+
   </xsl:template>
-  
+
 <!--===============================================================================  -->
 <!--============================Meta line for blog headers=========================  -->
 <!--===============================================================================  -->
@@ -2933,7 +2877,7 @@ or else only the first n items will be sorted -->
             <xsl:attribute name="class">
               <xsl:text>meta-line clearfix</xsl:text>
             </xsl:attribute>
-      
+
             <!-- date here -->
             <xsl:variable name="formatted-date">
               <xsl:call-template name="format-date-blog">
@@ -2941,10 +2885,10 @@ or else only the first n items will be sorted -->
                 <xsl:with-param name="date" select="./@date"/>
               </xsl:call-template>
             </xsl:variable>
-            
+
             <div class="date-row">
               <i class="fa fa-calendar" style="padding-right: 5px; margin-bottom:10px;"></i>
-              
+
               <span id="date"><xsl:value-of select="$formatted-date"/></span>
 
 
@@ -2958,7 +2902,7 @@ or else only the first n items will be sorted -->
               </xsl:if>
 
             </div>
-      
+
             <xsl:element name="div">
               <xsl:attribute name="class">
 <!--                 <xsl:text>pull-left</xsl:text> -->
@@ -2996,7 +2940,7 @@ or else only the first n items will be sorted -->
                   <!-- main category -->
                   <xsl:if test="./categories/main-category">
                     <xsl:variable name="main-category-link">
-                      <!--                     <xsl:value-of select="$PATH"/> -->
+                      <!--                     <xsl:text>blog</xsl:text> -->
                       <xsl:text>#category=</xsl:text>
                       <xsl:value-of select="./categories/main-category"/>
                     </xsl:variable>
@@ -3007,7 +2951,7 @@ or else only the first n items will be sorted -->
                       <xsl:attribute name="style">display:inline-block;</xsl:attribute>
                       <xsl:element name="a">
                         <xsl:attribute name="href">
-                          <xsl:value-of select="$PATH"/>
+                          <xsl:text>blog</xsl:text>
                           <xsl:value-of select="$main-category-link"/>
                         </xsl:attribute>
                         <xsl:attribute name="data-filter-type">
@@ -3026,37 +2970,37 @@ or else only the first n items will be sorted -->
                       <xsl:for-each select="./categories/category">
                         <!--TODO: Create category link properly-->
                         <xsl:variable name="category-link">
-                          <!--                         <xsl:value-of select="$PATH"/> -->
+                          <!--                         <xsl:text>blog</xsl:text> -->
                           <xsl:text>#category=</xsl:text>
                           <xsl:value-of select="."/>
                         </xsl:variable>
-                        
+
                         <xsl:element name="li">
-                          
+
                           <xsl:attribute name="class">
                             <xsl:text>category</xsl:text>
                           </xsl:attribute>
-                          
+
                           <xsl:attribute name="style">display:inline-block;</xsl:attribute>
-                          
+
                           <xsl:element name="a">
-                            
+
                             <xsl:attribute name="href">
-                              <xsl:value-of select="$PATH"/>
+                              <xsl:text>blog</xsl:text>
                               <xsl:value-of select="$category-link"/>
                             </xsl:attribute>
-                            
+
                             <xsl:attribute name="data-filter-type">
                               <xsl:text>category</xsl:text>
                             </xsl:attribute>
-                            
+
                             <xsl:attribute name="data-filter-value">
                               <xsl:value-of select="."/>
                             </xsl:attribute>
-                            
+
                             <xsl:value-of select="."/>
                           </xsl:element>
-                          
+
                         </xsl:element>
                       </xsl:for-each>
 
@@ -3092,32 +3036,32 @@ or else only the first n items will be sorted -->
                   <xsl:for-each select="./tags/*">
                     <!--TODO: Create xsl tag link properly-->
                     <xsl:variable name="tag-link">
-                      <!--                     <xsl:value-of select="$PATH"/> -->
+                      <!--                     <xsl:text>blog</xsl:text> -->
                       <xsl:text>#tag=</xsl:text>
                       <xsl:value-of select="."/>
                     </xsl:variable>
-                    
+
                     <xsl:element name="li">
                       <xsl:attribute name="class">
                         <xsl:text>tag</xsl:text>
                       </xsl:attribute>
-                      
+
                       <xsl:attribute name="style">display:inline-block;</xsl:attribute>
-                     
+
                       <xsl:element name="a">
                         <xsl:attribute name="href">
-                          <xsl:value-of select="$PATH"/>
+                          <xsl:text>blog</xsl:text>
                           <xsl:value-of select="$tag-link"/>
                         </xsl:attribute>
-                        
+
                         <xsl:attribute name="data-filter-type">
                           <xsl:text>tag</xsl:text>
                         </xsl:attribute>
-                        
+
                         <xsl:attribute name="data-filter-value">
                           <xsl:value-of select="."/>
                         </xsl:attribute>
-                        
+
                         <xsl:value-of select="."/>
                       </xsl:element>
                     </xsl:element>
@@ -3127,4 +3071,5 @@ or else only the first n items will be sorted -->
             <!--END .meta-line-->
           </xsl:element>
   </xsl:template>
-</xsl:stylesheet>]]></stylesheet>
+</xsl:stylesheet>
+]]></stylesheet>
