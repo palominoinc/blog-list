@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<route controller="\WebpalCore\Controllers\Core@callTemplate" filter="" id="routMBurtISUrMuP" name="" parameters="{&quot;xpath&quot;:&quot;/web/pages//bloglist[@name='${list}']/blog[@name='${name}']&quot;, &quot;template&quot;:&quot;render-blog-page&quot;}" pattern="/blog/{list}/{name}" verb="get" webpalschematype="wpAppRoute"/>
