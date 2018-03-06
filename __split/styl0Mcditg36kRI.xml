@@ -59,14 +59,48 @@ Illegal reproduction and disclosure will be prosecuted  -->
     </xsl:call-template>
 
   </xsl:template>
+  
 
+  <xsl:template name="render-blog-tag">
+    <xsl:variable name="content">
+      <xsl:for-each select="$NODE">
+        <div class="row">
+          <div class="col col-md-9">
+            <div data-bloglist-id="{@id}">
+              <div class="grid" style="position: relative;">
+                <div class="grid-sizer col-sm-12">
+                  <xsl:for-each select="./blog[tags/tag=$tag]">
+                    <xsl:sort select="@date" order="descending"/>
+                    <xsl:apply-templates select="." mode="simple-list" />
+                  </xsl:for-each>
+                </div>
+              </div>
+            </div>
+          </div>
+          <xsl:call-template name="bloglist-index-sidebar"/>
+        </div>
+        <script src="/resource/ext/Bloglist/js/bloglist.js"></script>
+
+      </xsl:for-each>
+    </xsl:variable>
+    
+    <xsl:variable name="related1">
+      <xsl:for-each select="$NODE">
+        <xsl:apply-templates select="../*[@show-in='related1']"/>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:call-template name="page-default">
+      <xsl:with-param name="content-main" select="$content"/>
+      <xsl:with-param name="content-related1" select="$related1"/>
+    </xsl:call-template>
+
+  </xsl:template>
 
 
   <xsl:template name="bloglist-home-widget"> 
     <xsl:apply-templates select="(/web/pages//bloglist)[1]" mode="homewidget"/>
   </xsl:template>
-
-
 
 
   <xsl:template match="page/bloglist"> 
@@ -116,7 +150,7 @@ Illegal reproduction and disclosure will be prosecuted  -->
       <ul class="meta-tags">
         <i class="fa fa-tags"></i>
         <xsl:for-each select="tag">
-          <li class="tag" style="display:inline-block;"><a href="#tag={.}"><xsl:value-of select="."/></a></li>
+          <li class="tag" style="display:inline-block;"><a href="/blog/{ancestor::bloglist/@name}/tag/{.}"><xsl:value-of select="."/></a></li>
         </xsl:for-each>
       </ul>
     </div>
@@ -127,13 +161,14 @@ Illegal reproduction and disclosure will be prosecuted  -->
       <span class="meta-category">In: 
         <ul>
           <xsl:for-each select="main-category | category">
-            <li class="{name()}" style="display:inline-block;"><a href="#category={.}" data-filter-type="category" data-filter-value="{.}"><xsl:value-of select="."/></a></li>
+            <li class="{name()}" style="display:inline-block;"><a href="/blog/{ancestor::bloglist/@name}/cat/{.}" data-filter-type="category" data-filter-value="{.}"><xsl:value-of select="."/></a></li>
           </xsl:for-each>
         </ul>
       </span>
     </div>
   </xsl:template>
 
+  
   <xsl:template match="blog/title" priority="0.9"><h1><xsl:value-of select="."/></h1></xsl:template>
 
 

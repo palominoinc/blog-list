@@ -228,9 +228,9 @@ class BlogController extends Controller
     } else if ($type == "category") {
       $value = strtolower(strval($value));
       $xpath = $this->blogXPath."[translate(categories/category,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='{$value}' or translate(categories/main-category,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='{$value}']";
-//       $xpath = $this->newsXPath."[categories/category='{$value}']";
+       $xpath = $this->newsXPath."[categories/category='{$value}']";
     } else if ($type == "tag") {
-      //$xpath = $this->newsXPath."[translate(tags/tag,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='{$value}']";
+      $xpath = $this->newsXPath."[translate(tags/tag,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='{$value}']";
       $xpath = $this->blogXPath."[tags/tag='{$value}']";
 
     } else {

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<route controller="\WebpalCore\Controllers\Core@callTemplate" id="routLEQ3YtFlqDg9" parameters="{&quot;xpath&quot;:&quot;/web/pages//bloglist[@name='${list}']&quot;, &quot;template&quot;:&quot;render-blog-tag&quot;, &quot;tag&quot;:&quot;${tag}&quot;}" pattern="/blog/{list}/tag/{tag}" verb="get" webpalschematype="wpAppRoute"/>

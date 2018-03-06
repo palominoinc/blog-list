@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<README id="READXSkMthmV3wkq" lang="any" webpalschematype="wpHtml"><p>Blog Node Schema</p>
+
+<p><ch value="nbsp"/></p>
+
+<p>Page</p>
+
+<p>`--bloglist</p>
+
+<p><ch value="nbsp"/> `--blog</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> @id</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> @name</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> @archived</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> @upcoming</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> @date</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> @author</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> `--title</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> `--text</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> `--tags</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> <ch value="nbsp"/> `--tag</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> <ch value="nbsp"/> `--tag</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> `--categories</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> <ch value="nbsp"/> `--main category?</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> <ch value="nbsp"/> `--category</p>
+
+<p><ch value="nbsp"/> <ch value="nbsp"/> `--image<ch value="nbsp"/><ch value="nbsp"/></p>
+</README>
