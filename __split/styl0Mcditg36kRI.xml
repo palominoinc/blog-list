@@ -265,6 +265,12 @@ Illegal reproduction and disclosure will be prosecuted  -->
         <div class="widget blog-filters">
           <div class="title">Categories</div>
           <ul class="blog-by-category">
+            <xsl:for-each select="(blog/categories/main-category)[not(.=preceding::*)]">
+              <xsl:sort select="."/>
+              <li>
+                <a href="/blog/{../../../@name}/cat/{.}"><xsl:value-of select="."/></a>
+              </li>
+            </xsl:for-each>
             <xsl:for-each select="(blog/categories/category)[not(.=preceding::*)]">
               <xsl:sort select="."/>
               <li>

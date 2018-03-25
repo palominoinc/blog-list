@@ -219,6 +219,8 @@ class BlogController extends Controller
     $type: the type of filter we are making
     $value: the value of the filter our items must match
    */
+  
+  // Being done by xsl for-each statements 
   private function getFilteredBlogItems($type, $value) {
     //$value = strtolower(strval($value));
     if ($type == "year") {
