@@ -2,8 +2,8 @@
 <node-schema id="node__olvhOq9358" lang="any" show-in="main" webpalschematype="wpPageRaw"><![CDATA[<schema xmlns="http://www.palominosys.com/wpschema">
 
 
-  <complexType extends="wpPage" name="wpPage-wpBlogList">
-    <element name="bloglist" type="wpBlogList" folder="list"/>
+  <complexType extends="wpPage" name="wpPage-wpBlogList_v1">
+    <element name="bloglist" type="wpBlogList_v1" folder="list"/>
   </complexType>
 
   
@@ -11,7 +11,7 @@
   <!--  == a list of new items                     == -->
   <!--  ============================================= -->
 
-  <complexType name="wpBlogList" edittype="table" icon="table.png" lockable="yes">
+  <complexType name="wpBlogList_v1" edittype="table" icon="table.png" lockable="yes">
 
     <attribute name="id" use="auto" type="wpString" value="bloglst"/>
     <attribute name="name" use="default" type="wpString" value="bloglist"/>
@@ -28,14 +28,14 @@
     <attribute name="enable-rss" use="oneof" type="wpString" value="yes,no"/>
     <attribute name="style" use="oneof" type="wpString" value="default,image"/>
 
-    <element name="blog" type="wpBlog" minOccurs="1" />
+    <element name="blog" type="wpBlog_v1" minOccurs="1" />
   </complexType>
 
   <!--  ================== wpNews ================ -->
   <!--  ===  a new item                         == -->
   <!--  ========================================== -->
 
-  <complexType name="wpBlog" edittype="sheet" icon="blogpaper.png" lockable="yes">
+  <complexType name="wpBlog_v1" edittype="sheet" icon="blogpaper.png" lockable="yes">
 
     <attribute name="id" use="auto" type="wpString" value="blog"/>
     <attribute name="name" use="required" type="wpString" value="blog"/>
@@ -47,7 +47,7 @@
     <element name="text" type="wpHtml" minOccurs="1"/>
     <element name="tags" type="wpBlogTags" maxOccurs="1"/>
     <element name="categories" type="wpBlogCategories" maxOccurs="1"/>
-    <element name="image" type="wpImage" maxOccurs="1"/>   
+    <element name="image" type="wpImage_v1" maxOccurs="1"/>   
   </complexType>
 
   <complexType name="wpBlogTags" edittype="sheet" icon="table.png">

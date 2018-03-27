@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<extension id="exteCxJkyOGE6w_c" name="blog-list" webpalschematype="wpExtension">
+<extension id="exteCxJkyOGE6w_c" name="bloglist" webpalschematype="wpExtension">
   <source id="sourUHG5os62CWZC" __stub="yes"/>
   <resources id="resoy2BVjMUtYmvD" __stub="yes"/>
   <routes id="routC_ZJq46VuUaK" __stub="yes"/>

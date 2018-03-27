@@ -85,8 +85,8 @@ class BlogController extends Controller
     return $params;
   }
   /*getNews_JSON()
-      Returns a list of news items in JSON format 
-  
+      Returns a list of news items in JSON format
+
   */
   public function getBlogAsJSON() {
     $reqParams = array();
@@ -106,21 +106,21 @@ class BlogController extends Controller
       $filterValue = $reqParams['value'];
     }
     //TODO: Retrieve value (fiter value) from Request parameters
-    
+
     $result = array();
     $result["blog"] = array();
-    
+
     if (isset($filterType) && isset($filterValue)) {
       $element_node_list = $this->getFilteredBlogItems($filterType, $filterValue);
     } else {
-      $element_node_list = $this->getBlogItems();  
+      $element_node_list = $this->getBlogItems();
     }
     $elements = iterator_to_array($element_node_list);
     if (!can_iterate($elements)) {
       //return $result;
     }
     usort($elements, 'Bloglist\Controllers\sort_by_date_attr');
-    
+
     $firstItem = ($page-1) * $itemsPerPage;
     $lastItem = $firstItem + $itemsPerPage;
     //We start at -1 because we increase the counter as soon as we enter the loop
@@ -132,7 +132,7 @@ class BlogController extends Controller
         $numItems--;
         continue;
       }
-      
+
       $position++;
       if ($position < $firstItem) {
         continue;
@@ -143,7 +143,7 @@ class BlogController extends Controller
 
       // Get the name
       $name = $element->getAttribute("name");
-      
+
       // Get the title
       $title = $this->getBlogItemTitle($name);
 
@@ -155,11 +155,11 @@ class BlogController extends Controller
       $categories = $this->getBlogItemCategories($name);
       $tags = $this->getBlogItemTags($name);
 
-      
+
       // Get the text
       $synopsis = $this->getBlogItemSynopsis($name);
 
-      
+
       // Get the image source
       $img_url = $this->getBlogItemImageURL($name);
 
@@ -169,7 +169,7 @@ class BlogController extends Controller
       $month = date('M', $date);
       $year = date('Y', $date);
 
-      
+
       $blog_item = array();
       $blog_item['name'] = $name;
       $blog_item['title'] = $title;
@@ -188,7 +188,7 @@ class BlogController extends Controller
     }
     //Determine how many items and pages there are
     $numPages = ceil($numItems / $itemsPerPage);
-    
+
     $result["total"] = $numItems;
     $result["id"] = $this->getBloglistID();
     $result["current_page"] = $page;
@@ -196,7 +196,7 @@ class BlogController extends Controller
     $result["first_item"] = $firstItem + 1;
     $result["last_item"] = $lastItem;
     $result["num_pages"] = $numPages;
-    
+
     //echo "type: {$filterType} value: {$filterValue}";
     return json_encode($result);
   }
@@ -296,7 +296,7 @@ class BlogController extends Controller
     $node_list = $this->queryWeb("{$this->blogXPath}[@name='{$name}']/image");
     if (can_iterate($node_list)) {
       foreach($node_list as $image_node) {
-        $imageURL = $image_node->getAttribute("src");        
+        $imageURL = $image_node->getAttribute("src");
         break;
       }
     }
@@ -304,7 +304,7 @@ class BlogController extends Controller
       $imageURL="4098761476254413";
     }
 
-    return "?f={$imageURL}&resize=330x210";
+    return "{$imageURL}?resize=330x210";
   }
   /* Given the name of a news item, return the date
     of that news item */
