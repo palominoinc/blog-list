@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<routes column-widths="67,60,274,526,92,101,50" id="routC_ZJq46VuUaK" webpalschematype="wpAppRouteList">
+  <route controller="Bloglist\Controllers\BlogController@getBlogAsJSON" id="routC8wvmxU6sAWB" pattern="/about-us/blog" verb="post" webpalschematype="wpAppRoute"/>
+  <route id="routzmWjtBT6ykMl" pattern="/about-us/blog/year/{year}" verb="get" webpalschematype="wpAppRoute"/>
+</routes>

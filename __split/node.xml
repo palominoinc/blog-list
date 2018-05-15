@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <extension id="exteCxJkyOGE6w_c" name="blog-list" webpalschematype="wpExtension">
-  <source id="sourUHG5os62CWZC" __stub="yes"/>
-  <resources id="resoy2BVjMUtYmvD" __stub="yes"/>
-  <routes id="routC_ZJq46VuUaK" __stub="yes"/>
-  <controllers id="contfULSvksy5FiL" __stub="yes"/>
-  <stylesheet id="styl0Mcditg36kRI" __stub="yes"/>
-  <node-schema id="node__olvhOq9358" __stub="yes"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="source-source-sourUHG5os62CWZC.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="resources-resources-resoy2BVjMUtYmvD.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="routes-routC_ZJq46VuUaK.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="controllers-controllers-contfULSvksy5FiL.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="stylesheet-blog-stylesheet-styl0Mcditg36kRI.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="node-schema-node__olvhOq9358.xml"/>
 </extension>
